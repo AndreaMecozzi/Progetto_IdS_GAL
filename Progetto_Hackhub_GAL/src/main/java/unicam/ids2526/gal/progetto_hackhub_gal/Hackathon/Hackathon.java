@@ -1,6 +1,8 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.Hackathon;
 
 import unicam.ids2526.gal.progetto_hackhub_gal.Team;
+import unicam.ids2526.gal.progetto_hackhub_gal.profili.Giudice;
+import unicam.ids2526.gal.progetto_hackhub_gal.profili.Mentore;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,11 +20,18 @@ public class Hackathon {
     private LocalDate scadenzaIscrizioni;
     private ArrayList<Team> teams;
 
-    public Hackathon(long hackathonID, String nome, String descrizione) {
+
+
+    private Giudice giudice;
+    private ArrayList<Mentore> mentori;
+
+    public Hackathon(long hackathonID, String nome, String descrizione, Giudice giudice, Mentore mentore) {
         this.hackathonID = hackathonID;
         this.nome = nome;
         this.descrizione = descrizione;
         this.scadenzaIscrizioni=LocalDate.now().plusDays(7);
+        this.giudice=giudice;
+        this.mentori.add(mentore);
     }
 
     public long getHackathonID() {
@@ -71,5 +80,25 @@ public class Hackathon {
 
     public void setTeams(ArrayList<Team> teams) {
         this.teams = teams;
+    }
+
+    public Giudice getGiudice() {
+        return giudice;
+    }
+
+    public void setGiudice(Giudice giudice) {
+        this.giudice = giudice;
+    }
+
+    public ArrayList<Mentore> getMentori() {
+        return mentori;
+    }
+
+    public void addMentore(Mentore mentore) {
+        this.mentori.add(mentore);
+    }
+
+    public void getVincitore(){
+        //TODO
     }
 }
