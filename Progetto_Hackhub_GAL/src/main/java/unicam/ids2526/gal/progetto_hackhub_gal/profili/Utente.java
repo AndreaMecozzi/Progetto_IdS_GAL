@@ -32,7 +32,7 @@ public class Utente extends ConcreteAccount{
     }
 
     public void invita(Utente destinatario, Invito invito){
-        //TODO
+        //TODO implementare
     }
 
 

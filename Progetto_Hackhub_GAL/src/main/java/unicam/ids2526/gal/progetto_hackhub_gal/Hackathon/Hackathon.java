@@ -19,9 +19,6 @@ public class Hackathon {
     private HackathonState state;
     private LocalDate scadenzaIscrizioni;
     private ArrayList<Team> teams;
-
-
-
     private Giudice giudice;
     private ArrayList<Mentore> mentori;
 
@@ -81,6 +78,9 @@ public class Hackathon {
     public void setTeams(ArrayList<Team> teams) {
         this.teams = teams;
     }
+    public boolean iscriviTeam(Team team) {
+        return this.teams.add(team);
+    }
 
     public Giudice getGiudice() {
         return giudice;
@@ -99,6 +99,6 @@ public class Hackathon {
     }
 
     public void getVincitore(){
-        //TODO
+        //TODO implementare
     }
 }
