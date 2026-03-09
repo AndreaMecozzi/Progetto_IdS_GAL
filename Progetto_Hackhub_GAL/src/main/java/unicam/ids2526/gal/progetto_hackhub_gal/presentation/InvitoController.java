@@ -34,7 +34,7 @@ public class InvitoController {
     @GetMapping("/visualizza/{username}")
     public ResponseEntity<Object> visualizzaInviti(@PathVariable String username){
         try {
-         //chiama il metodo dell'hendler
+         //chiama il metodo dell'handler
             List<Invito> inviti = invitoHandler.visualizzaInviti(username);
             if (inviti == null) {
                 return new ResponseEntity<>("non ci sono inviti", HttpStatus.OK);
