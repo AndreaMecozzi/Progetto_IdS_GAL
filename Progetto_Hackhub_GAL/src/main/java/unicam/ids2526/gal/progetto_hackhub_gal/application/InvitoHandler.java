@@ -7,6 +7,8 @@ import unicam.ids2526.gal.progetto_hackhub_gal.core.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.InvitoRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
 
+import java.util.List;
+
 /**
  * Implementa la logica di business per le azione che possono essere svolte da un utente
  */
@@ -43,5 +45,30 @@ public class InvitoHandler {
 
         Invito invito=new Invito(mittente,ricevente);
         invitoRep.save(invito);
+    }
+
+
+    /**
+     * restituisce la lista degli inviti ricevuti dall'utente
+     *
+     * @param username  l'username dell'utente
+     * @return lista di inviti oppure null se non esistono
+     *
+     */
+
+    public List<Invito> visualizzaInviti(String username) throws Exception{
+        Utente utente = userRep.findByUsername(username).orElseThrow(
+                ()->new Exception("Errore: Utente non trovato"));
+
+        //chiama il metodo del repository e cerca tutti gli inviti dove il campo ricevente
+        //corrisponde all'utente trovato
+        List<Invito> inviti = invitoRep.findByRicevente(utente);
+
+
+        if(inviti.isEmpty()){
+            return null;
+        }else{
+            return inviti;
+        }
     }
 }
