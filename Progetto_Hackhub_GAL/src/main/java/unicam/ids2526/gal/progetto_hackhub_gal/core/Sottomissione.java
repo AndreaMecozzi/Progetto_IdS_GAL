@@ -3,9 +3,8 @@ package unicam.ids2526.gal.progetto_hackhub_gal.core;
 import jakarta.persistence.*;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
+@Entity
 public class Sottomissione {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,41 +13,31 @@ public class Sottomissione {
     @Column(nullable = false)
     private String nome;
 
-    /* * Nota: Se File è un'altra @Entity, usiamo @OneToMany.
-     * Se vuoi solo memorizzare i percorsi dei file come stringhe, si userebbe @ElementCollection.
-     * Qui assumiamo che File sia un'entità correlata.
+    /** Usiamo @OneToOne perché una sottomissione ha un solo file.
+     * cascade = CascadeType.ALL serve a salvare/cancellare il file
+     * automaticamente insieme alla sottomissione.
      */
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "sottomissione_id") // Crea la chiave esterna nella tabella File
-    private List<File> files = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_id", referencedColumnName = "id")
+    private File file;
 
+    // Costruttori
     public Sottomissione(){}
 
     public Sottomissione(String nome){
         this.nome= nome;
     }
 
-    public long getSottomissioneID() {
-        return sottomissioneID;
-    }
+    // Getter & Setter
+    public long getSottomissioneID() { return sottomissioneID; }
 
-    public void setSottomissioneID(long sottomissioneID) {
-        this.sottomissioneID = sottomissioneID;
-    }
+    public void setSottomissioneID(long sottomissioneID) { this.sottomissioneID = sottomissioneID; }
 
-    public String getNome() {
-        return nome;
-    }
+    public String getNome() { return nome; }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public List<File> getFiles() {
-        return files;
-    }
+    public File getFiles() { return file; }
 
-    public void setFiles(List<File> files) {
-        this.files = files;
-    }
+    public void setFiles(File file) { this.file = file; }
 }
