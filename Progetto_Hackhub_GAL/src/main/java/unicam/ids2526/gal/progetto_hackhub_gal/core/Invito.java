@@ -18,6 +18,7 @@ public class Invito {
     @ManyToOne
     @JoinColumn(name="riceventeId", nullable = false)
     private Utente ricevente;
+    private EsitoInvito esitoInvito;
 
     public Invito() {}
 
@@ -25,12 +26,14 @@ public class Invito {
         this.messaggio = "Unisciti al mio team!";
         this.mittente = mittente;
         this.ricevente = ricevente;
+        this.esitoInvito=EsitoInvito.INVIATO;
     }
 
     public Invito(String messaggio, Utente mittente, Utente ricevente) {
         this.messaggio = messaggio;
         this.mittente = mittente;
         this.ricevente = ricevente;
+        this.esitoInvito=EsitoInvito.INVIATO;
     }
 
     public Long getInvitoId() {
