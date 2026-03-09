@@ -18,6 +18,7 @@ public class Invito {
     @ManyToOne
     @JoinColumn(name="riceventeId", nullable = false)
     private Utente ricevente;
+    @Enumerated(EnumType.STRING)
     private EsitoInvito esitoInvito;
 
     public Invito() {}

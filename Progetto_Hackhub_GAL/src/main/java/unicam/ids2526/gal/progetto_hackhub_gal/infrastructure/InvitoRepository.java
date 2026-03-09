@@ -8,8 +8,8 @@ import java.util.Optional;
 import java.util.List;
 
 public interface InvitoRepository extends JpaRepository<Invito, Long> {
-
 //query corrispondente = SELECT * FROM invito WHERE ricevente = ?
     List <Invito> findByRicevente (Utente ricevente);
 
+    boolean existsByMittenteAndRicevente(Utente mittente, Utente ricevente);
 }

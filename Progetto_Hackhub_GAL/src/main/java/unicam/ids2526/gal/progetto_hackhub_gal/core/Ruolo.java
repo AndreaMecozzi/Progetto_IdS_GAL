@@ -7,5 +7,5 @@ public enum Ruolo {
     UTENTE,
     GIUDICE,
     ORGANIZZATORE,
-    METNORE
+    MENTORE
 }

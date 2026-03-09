@@ -37,11 +37,21 @@ public class InvitoHandler {
         Utente ricevente=userRep.findByUsername(userRicevente).orElseThrow(
                 ()->new Exception("Errore: Utente non trovato")); /// --> Utente non trovato
 
-        if(ricevente.getRuolo()!= Ruolo.UTENTE){
-            throw  new Exception("Errore: Possono essere invitati solo gli utenti");
+        if(mittente.getUserId().equals(ricevente.getUserId())){
+            throw new Exception("Errore: Impossibile invitare se stessi"); /// --> Invito a se stessi
         }
 
-        //TODO implementare controllo del team tramite TeamRepository
+        if(ricevente.getRuolo()!= Ruolo.UTENTE || mittente.getRuolo()!= Ruolo.UTENTE){
+            throw  new Exception("Errore: Solo gli utenti possono invitare o essere invitati"); /// --> Non autorizzati
+        }
+
+        if(invitoRep.existsByMittenteAndRicevente(mittente,ricevente)){
+            throw new Exception("Errore: Utente già invitato"); /// --> Invito utente già invitato
+        }
+
+
+        //TODO implementare controllo che mittente abbia un team
+        //TODO implementare controllo del team tramite TeamRepository per controllare ricevente in un team
 
         Invito invito=new Invito(mittente,ricevente);
         invitoRep.save(invito);
