@@ -29,7 +29,7 @@ public class Sottomissione {
 
     public Sottomissione(String nome, Team team){
         this.nome= nome;
-        this.team=team;
+        this.team= team;
     }
 
     // Getter & Setter

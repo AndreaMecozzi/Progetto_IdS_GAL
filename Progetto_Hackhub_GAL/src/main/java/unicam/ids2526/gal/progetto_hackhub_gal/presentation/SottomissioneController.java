@@ -24,7 +24,7 @@ public class SottomissioneController {
     public ResponseEntity<Object> creaSottomissione(@RequestBody Team team){
         try{
             sottomissioneHandler.creaSottomissione(team);
-            return new ResponseEntity<Object>("Sottomissione creata!", HttpStatus.CREATED);
+            return new ResponseEntity<Object>("Sottomissione creata", HttpStatus.CREATED);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -35,7 +35,7 @@ public class SottomissioneController {
     public ResponseEntity<Object> aggiornaSottomissione(@PathVariable String nomeTeam, @RequestBody File file) {
         try {
             sottomissioneHandler.aggiornaSottomissione(nomeTeam, file);
-            return new ResponseEntity<>("Sottomissione aggiornata con il nuovo file!", HttpStatus.OK);
+            return new ResponseEntity<>("Sottomissione aggiornata con il nuovo file", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

@@ -32,8 +32,11 @@ public class SottomissioneHandler {
                 () -> new Exception("Errore: Team non esistente"));
 
         // Creazione dell'entità sottomissione legata al team trovato
-        Sottomissione sottomissione = new Sottomissione("Sottomissione - " + t.getNome(), t);
+        Sottomissione sottomissione = new Sottomissione(t.getNome(), t);
+        // Aggiunge la sottomissione al team
+        t.setSottomissioni(sottomissione);
         sottomissioneRep.save(sottomissione);
+        teamRep.save(t);
     }
 
     /**
@@ -66,7 +69,7 @@ public class SottomissioneHandler {
      */
     public Sottomissione visualizzaSottomissione(String nomeTeam, String nomeHackathon) throws Exception {
         return sottomissioneRep.findByTeamAndHackathon(nomeTeam, nomeHackathon).orElseThrow(
-                () -> new Exception("Errore: Sottomissione non trovata per i parametri inseriti"));
+                () -> new Exception("Errore: la sottomissione non esiste"));
     }
 }
 
