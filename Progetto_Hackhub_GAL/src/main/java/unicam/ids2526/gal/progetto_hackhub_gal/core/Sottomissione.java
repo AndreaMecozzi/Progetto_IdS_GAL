@@ -13,19 +13,23 @@ public class Sottomissione {
     @Column(nullable = false)
     private String nome;
 
-    /** Usiamo @OneToOne perché una sottomissione ha un solo file.
-     * cascade = CascadeType.ALL serve a salvare/cancellare il file
+    /** cascade = CascadeType.ALL serve a salvare/cancellare il file
      * automaticamente insieme alla sottomissione.
      */
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "file_id", referencedColumnName = "id")
+    //@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "file", referencedColumnName = "id")
     private File file;
+
+    @ManyToOne
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
 
     // Costruttori
     public Sottomissione(){}
 
-    public Sottomissione(String nome){
+    public Sottomissione(String nome, Team team){
         this.nome= nome;
+        this.team=team;
     }
 
     // Getter & Setter
@@ -37,7 +41,7 @@ public class Sottomissione {
 
     public void setNome(String nome) { this.nome = nome; }
 
-    public File getFiles() { return file; }
+    public File getFile() { return file; }
 
-    public void setFiles(File file) { this.file = file; }
+    public void setFile(File file) { this.file = file; }
 }

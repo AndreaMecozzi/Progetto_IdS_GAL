@@ -13,10 +13,10 @@ public class Invito {
     private Long invitoId;
     private String messaggio;
     @ManyToOne
-    @JoinColumn(name="mittenteId", nullable = false)
+    @JoinColumn(name="mittente_id", nullable = false)
     private Utente mittente;
     @ManyToOne
-    @JoinColumn(name="riceventeId", nullable = false)
+    @JoinColumn(name="ricevente_id", nullable = false)
     private Utente ricevente;
     @Enumerated(EnumType.STRING)
     private EsitoInvito esitoInvito;
