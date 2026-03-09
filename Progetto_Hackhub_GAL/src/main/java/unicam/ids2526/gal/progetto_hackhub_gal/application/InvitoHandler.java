@@ -2,6 +2,7 @@ package unicam.ids2526.gal.progetto_hackhub_gal.application;
 
 import org.springframework.stereotype.Service;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Invito;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.Ruolo;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.InvitoRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
@@ -10,11 +11,11 @@ import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
  * Implementa la logica di business per le azione che possono essere svolte da un utente
  */
 @Service
-public class UtenteHandler {
+public class InvitoHandler {
     private final UtenteRepository userRep;
     private final InvitoRepository invitoRep;
 
-    public UtenteHandler(UtenteRepository userRep, InvitoRepository invitoRep) {
+    public InvitoHandler(UtenteRepository userRep, InvitoRepository invitoRep) {
         this.userRep=userRep;
         this.invitoRep=invitoRep;
     }
@@ -33,6 +34,10 @@ public class UtenteHandler {
 
         Utente ricevente=userRep.findByUsername(userRicevente).orElseThrow(
                 ()->new Exception("Errore: Utente non trovato")); /// --> Utente non trovato
+
+        if(ricevente.getRuolo()!= Ruolo.UTENTE){
+            throw  new Exception("Errore: Possono essere invitati solo gli utenti");
+        }
 
         //TODO implementare controllo del team tramite TeamRepository
 

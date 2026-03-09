@@ -4,22 +4,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import unicam.ids2526.gal.progetto_hackhub_gal.application.UtenteHandler;
+import unicam.ids2526.gal.progetto_hackhub_gal.application.InvitoHandler;
 
 @RestController
-@RequestMapping("/utenti")
-public class UtenteController {
-    private final UtenteHandler utenteHandler;
+@RequestMapping("/inviti")
+public class InvitoController {
+    private final InvitoHandler invitoHandler;
 
-    public UtenteController(UtenteHandler utenteHandler) {
-        this.utenteHandler = utenteHandler;
+    public InvitoController(InvitoHandler utenteHandler) {
+        this.invitoHandler = utenteHandler;
     }
 
     @PreAuthorize("hasAuthority('UTENTE')") /// Da testare e rivedere
     @PostMapping("/invita/{userMittente}")
     public ResponseEntity<Object> invitaUtente(@PathVariable String userMittente,@RequestBody String userRicevente){
         try{
-            utenteHandler.invitaUtente(userMittente, userRicevente);
+            invitoHandler.invitaUtente(userMittente, userRicevente);
             return new ResponseEntity<>("Invito inviato!", HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
