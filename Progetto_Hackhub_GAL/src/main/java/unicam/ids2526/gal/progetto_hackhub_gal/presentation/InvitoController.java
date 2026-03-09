@@ -31,7 +31,7 @@ public class InvitoController {
     }
 
     //@PreAuthorize("hasAuthority('UTENTE')")
-    @GetMapping("/visualizza/{username}")
+    @GetMapping("/visualizzaInviti/{username}")
     public ResponseEntity<Object> visualizzaInviti(@PathVariable String username){
         try {
          //chiama il metodo dell'handler

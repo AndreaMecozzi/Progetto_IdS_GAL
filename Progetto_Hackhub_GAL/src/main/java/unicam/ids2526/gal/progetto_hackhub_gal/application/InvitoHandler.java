@@ -5,6 +5,7 @@ import unicam.ids2526.gal.progetto_hackhub_gal.core.Invito;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Ruolo;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.InvitoRepository;
+import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
 
 import java.util.List;
@@ -16,10 +17,12 @@ import java.util.List;
 public class InvitoHandler {
     private final UtenteRepository userRep;
     private final InvitoRepository invitoRep;
+    private final TeamRepository teamRep;
 
-    public InvitoHandler(UtenteRepository userRep, InvitoRepository invitoRep) {
+    public InvitoHandler(UtenteRepository userRep, InvitoRepository invitoRep, TeamRepository teamRep) {
         this.userRep=userRep;
         this.invitoRep=invitoRep;
+        this.teamRep=teamRep;
     }
 
     /**
@@ -49,9 +52,13 @@ public class InvitoHandler {
             throw new Exception("Errore: Utente già invitato"); /// --> Invito utente già invitato
         }
 
+        if(teamRep.findByUtenti_Username(userMittente).isEmpty()){
+            throw  new Exception("Errore: Devi creare prima un team!"); /// --> Il mittente non ha un team
+        }
 
-        //TODO implementare controllo che mittente abbia un team
-        //TODO implementare controllo del team tramite TeamRepository per controllare ricevente in un team
+        if (!teamRep.findByUtenti_Username(userRicevente).isEmpty()){
+            throw  new Exception("Errore: L'Utente è già in un team"); /// --> Il ricevente è già in un team
+        }
 
         Invito invito=new Invito(mittente,ricevente);
         invitoRep.save(invito);
