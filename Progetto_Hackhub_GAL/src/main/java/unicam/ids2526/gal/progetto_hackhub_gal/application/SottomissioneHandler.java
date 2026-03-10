@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Sottomissione;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Team;
+import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.HackathonRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.SottomissioneRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
 
@@ -14,6 +15,7 @@ public class SottomissioneHandler {
 
     private final SottomissioneRepository sottomissioneRep;
     private final TeamRepository teamRep;
+    private final HackathonRepository hackathonRep;
 
     public SottomissioneHandler(SottomissioneRepository sottomissioneRep, TeamRepository teamRep) {
         this.sottomissioneRep = sottomissioneRep;
@@ -57,6 +59,22 @@ public class SottomissioneHandler {
 
         sottomissione.setFile(file);
         sottomissioneRep.save(sottomissione);
+
+
+        Long teamId = sottomissione.getTeam().getTeamId(); ;
+
+        Hackathon h = teamRep.findHackathonByTeamId(teamId)
+                .orElseThrow(() -> new RuntimeException("Hackathon non trovato per questo team"));
+
+        try{
+            if(h.getNomeStato().equals("IN_CORSO"){
+                sottomissione.setFile(file);
+                sottomissioneRep.save(sottomissione);
+            }
+        }catch(Exception e){
+            throw new Exception("Errore: impossibile aggiornare la sottomissione");
+        }
+
     }
 
     /**

@@ -44,4 +44,12 @@ public class Sottomissione {
     public File getFile() { return file; }
 
     public void setFile(File file) { this.file = file; }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 }
