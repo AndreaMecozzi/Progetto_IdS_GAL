@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.InvitoHandler;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Invito;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -19,9 +20,10 @@ public class InvitoController {
         this.invitoHandler = utenteHandler;
     }
 
-    //@PreAuthorize("hasAuthority('UTENTE')") /// Da testare e rivedere
-    @PostMapping("/invita/{userMittente}")
-    public ResponseEntity<Object> invitaUtente(@PathVariable String userMittente,@RequestBody String userRicevente){
+    @PreAuthorize("hasAuthority('UTENTE')")
+    @PostMapping("/invita")
+    public ResponseEntity<Object> invitaUtente(Authentication authentication,@RequestBody String userRicevente){
+        String userMittente = authentication.getName();
         try{
             invitoHandler.invitaUtente(userMittente, userRicevente);
             return new ResponseEntity<>("Invito inviato!", HttpStatus.OK);
@@ -30,9 +32,10 @@ public class InvitoController {
         }
     }
 
-    //@PreAuthorize("hasAuthority('UTENTE')")
-    @GetMapping("/visualizzaInviti/{username}")
-    public ResponseEntity<Object> visualizzaInviti(@PathVariable String username){
+    @PreAuthorize("hasAuthority('UTENTE')")
+    @GetMapping("/visualizzaInviti")
+    public ResponseEntity<Object> visualizzaInviti(Authentication autentication){
+        String username = autentication.getName();
         try {
          //chiama il metodo dell'handler
             List<Invito> inviti = invitoHandler.visualizzaInviti(username);
