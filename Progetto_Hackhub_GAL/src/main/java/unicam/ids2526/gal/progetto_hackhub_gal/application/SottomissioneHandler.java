@@ -17,9 +17,10 @@ public class SottomissioneHandler {
     private final TeamRepository teamRep;
     private final HackathonRepository hackathonRep;
 
-    public SottomissioneHandler(SottomissioneRepository sottomissioneRep, TeamRepository teamRep) {
+    public SottomissioneHandler(SottomissioneRepository sottomissioneRep, TeamRepository teamRep,HackathonRepository hackathonRep) {
         this.sottomissioneRep = sottomissioneRep;
         this.teamRep = teamRep;
+        this.hackathonRep = hackathonRep;
     }
 
     /**
@@ -67,7 +68,7 @@ public class SottomissioneHandler {
                 .orElseThrow(() -> new RuntimeException("Hackathon non trovato per questo team"));
 
         try{
-            if(h.getNomeStato().equals("IN_CORSO"){
+            if(h.getNomeStato().equals("IN_CORSO")){
                 sottomissione.setFile(file);
                 sottomissioneRep.save(sottomissione);
             }

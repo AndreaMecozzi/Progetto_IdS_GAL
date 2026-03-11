@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-@Entity
+
 import jakarta.persistence.*;
-        import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 
 @Entity
 public class Hackathon {
@@ -35,15 +35,17 @@ public class Hackathon {
 
     private int dimenisoneTeam; // Mantengo il refuso "dimenisone" come da diagramma
 
+    private String regolamento;
+
     // Costruttore di default richiesto da JPA
     public Hackathon() {
     }
+
 
     // Getter e Setter
     public Long getHackathonID() {
         return hackathonID;
     }
-
     public void setHackathonID(Long hackathonID) {
         this.hackathonID = hackathonID;
     }
@@ -51,7 +53,6 @@ public class Hackathon {
     public String getNome() {
         return nome;
     }
-
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -59,7 +60,6 @@ public class Hackathon {
     public StatoHackathon getStato() {
         return stato;
     }
-
     public void setStato(StatoHackathon stato) {
         this.stato = stato;
     }
@@ -67,7 +67,6 @@ public class Hackathon {
     public LocalDateTime getInizioIscrizione() {
         return inizioIscrizione;
     }
-
     public void setInizioIscrizione(LocalDateTime inizioIscrizione) {
         this.inizioIscrizione = inizioIscrizione;
     }
@@ -75,7 +74,6 @@ public class Hackathon {
     public LocalDateTime getScadenzaIscrizione() {
         return scadenzaIscrizione;
     }
-
     public void setScadenzaIscrizione(LocalDateTime scadenzaIscrizione) {
         this.scadenzaIscrizione = scadenzaIscrizione;
     }
@@ -83,7 +81,6 @@ public class Hackathon {
     public LocalDateTime getFineHackathon() {
         return fineHackathon;
     }
-
     public void setFineHackathon(LocalDateTime fineHackathon) {
         this.fineHackathon = fineHackathon;
     }
@@ -91,7 +88,6 @@ public class Hackathon {
     public Double getPremio() {
         return premio;
     }
-
     public void setPremio(Double premio) {
         this.premio = premio;
     }
@@ -99,8 +95,11 @@ public class Hackathon {
     public int getDimenisoneTeam() {
         return dimenisoneTeam;
     }
-
     public void setDimenisoneTeam(int dimenisoneTeam) {
         this.dimenisoneTeam = dimenisoneTeam;
     }
+
+    public String getRegolamento(){return regolamento;}
+    public void setRegolamento(String regolamento){this.regolamento=regolamento;}
+
 }
