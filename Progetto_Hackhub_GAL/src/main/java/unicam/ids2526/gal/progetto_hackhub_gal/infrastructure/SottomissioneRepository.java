@@ -16,10 +16,6 @@ public interface SottomissioneRepository extends JpaRepository<Sottomissione, Lo
      */
     Optional<Sottomissione> findByTeamNome(String nometeam);
 
-    /**
-     * Query corrispondente: SELECT * FROM sottomissione WHERE team_id = ? AND hackathon_id = ?
-     * Utilizzato per la visualizzazione specifica richiesta nell'UML.
-     */
-    Optional<Sottomissione> findByTeamAndHackathon(String nometeam, String nomeHackathon);
+    Optional<Sottomissione> findByTeamTeamId(Long teamId);
 
 }

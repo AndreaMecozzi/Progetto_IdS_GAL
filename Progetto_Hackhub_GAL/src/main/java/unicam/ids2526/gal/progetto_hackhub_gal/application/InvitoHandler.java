@@ -34,18 +34,18 @@ public class InvitoHandler {
      * @throws RuntimeException se l'utente ricevente non esiste o è già membro di un team
      */
     public void invitaUtente(String userMittente, String userRicevente) throws Exception{
-        Utente mittente=userRep.findByUsername(userMittente).orElseThrow(
-                ()->new Exception("Errore: Mittente non esistente")); /// ---> Mittente non esistente
+
+        if(userMittente.equals(userRicevente)){
+            throw new Exception("Errore: Impossibile invitare se stessi"); /// --> Invito a se stessi
+        }
+
+        Utente mittente=userRep.findByUsername(userMittente).orElseThrow();
 
         Utente ricevente=userRep.findByUsername(userRicevente).orElseThrow(
                 ()->new Exception("Errore: Utente non trovato")); /// --> Utente non trovato
 
-        if(mittente.getUserId().equals(ricevente.getUserId())){
-            throw new Exception("Errore: Impossibile invitare se stessi"); /// --> Invito a se stessi
-        }
-
-        if(ricevente.getRuolo()!= Ruolo.UTENTE || mittente.getRuolo()!= Ruolo.UTENTE){
-            throw  new Exception("Errore: Solo gli utenti possono invitare o essere invitati"); /// --> Non autorizzati
+        if(ricevente.getRuolo()!= Ruolo.UTENTE){
+            throw  new Exception("Errore: È possibile invitare solo gli utenti"); /// --> Non autorizzati
         }
 
         if(invitoRep.existsByMittenteAndRicevente(mittente,ricevente)){
@@ -56,7 +56,7 @@ public class InvitoHandler {
             throw  new Exception("Errore: Devi creare prima un team!"); /// --> Il mittente non ha un team
         }
 
-        if (!teamRep.findByUtenti_Username(userRicevente).isEmpty()){
+        if (teamRep.findByUtenti_Username(userRicevente).isPresent()){
             throw  new Exception("Errore: L'Utente è già in un team"); /// --> Il ricevente è già in un team
         }
 
@@ -66,7 +66,7 @@ public class InvitoHandler {
 
 
     /**
-     * restituisce la lista degli inviti ricevuti dall'utente
+     * Restituisce la lista degli inviti ricevuti dall'utente
      *
      * @param username  l'username dell'utente
      * @return lista di inviti oppure null se non esistono

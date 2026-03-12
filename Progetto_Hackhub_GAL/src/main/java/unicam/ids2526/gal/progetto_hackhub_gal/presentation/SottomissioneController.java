@@ -3,6 +3,7 @@ package unicam.ids2526.gal.progetto_hackhub_gal.presentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.SottomissioneHandler;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Hackathon;
@@ -42,10 +43,11 @@ public class SottomissioneController {
     }
 
     @PreAuthorize("hasAuthority('UTENTE')")
-    @GetMapping("/visualizza/{nomeTeam}/{nomeHackathon}")
-    public ResponseEntity<Object> visualizzaSottomissione(@PathVariable String nomeTeam, @PathVariable String nomeHackathon) {
+    @GetMapping("/visualizza")
+    public ResponseEntity<Object> visualizzaSottomissione(Authentication authentication) {
+        String username= authentication.getName();
         try {
-            return new ResponseEntity<>(sottomissioneHandler.visualizzaSottomissione(nomeTeam, nomeHackathon), HttpStatus.OK);
+            return new ResponseEntity<>(sottomissioneHandler.visualizzaSottomissione(username), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

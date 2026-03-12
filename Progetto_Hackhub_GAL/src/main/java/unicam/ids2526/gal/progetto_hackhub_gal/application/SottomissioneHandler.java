@@ -79,13 +79,17 @@ public class SottomissioneHandler {
     /**
      * Restituisce la sottomissione effettuata da un team per un determinato hackathon
      *
-     * @param nomeTeam l'oggetto Team che ha effettuato la sottomissione
-     * @param nomeHackathon l'oggetto Hackathon a cui si riferisce la sottomissione
-     * @return la sottomissione trovata
+     * @param username l'utente che richiede di visualizzare la sottomissione del proprio
+     *                 team
      * @throws Exception se non esiste una sottomissione che soddisfi entrambi i criteri
      */
-    public Sottomissione visualizzaSottomissione(String nomeTeam, String nomeHackathon) throws Exception {
-        return sottomissioneRep.findByTeamAndHackathon(nomeTeam, nomeHackathon).orElseThrow(
+    public Sottomissione visualizzaSottomissione(String username) throws Exception {
+        Team team=teamRep.findByUtenti_Username(username).orElseThrow(
+                () -> new Exception("Errore: Team non esistente"));
+
+        Long teamId= team.getTeamId();
+
+        return sottomissioneRep.findByTeamTeamId(teamId).orElseThrow(
                 () -> new Exception("Errore: la sottomissione non esiste"));
     }
 }

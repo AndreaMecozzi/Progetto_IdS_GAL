@@ -1,5 +1,6 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.security;
 
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -26,11 +27,13 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
 
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoint PUBBLICI: accessibili senza token JWT
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/utenti/login").permitAll()
                         .requestMatchers("/utenti/registrati").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
 
