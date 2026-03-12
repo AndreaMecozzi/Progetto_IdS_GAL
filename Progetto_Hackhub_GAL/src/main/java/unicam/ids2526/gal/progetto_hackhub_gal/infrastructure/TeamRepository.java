@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface TeamRepository extends JpaRepository<Team,Long> {
     Optional<Team> findByUtenti_Username(String username);
     Optional<Hackathon> findHackathonByTeamId(Long teamId);
+    Optional<Team> findByNome(String nome);
 }
