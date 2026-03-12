@@ -2,6 +2,8 @@ package unicam.ids2526.gal.progetto_hackhub_gal.core;
 
 public class InIscrizione implements StatoHackathon{
 
+    private Hackathon hackathon;
+
     @Override
     public void cambiaStato(){
         //TODO Implementare
@@ -10,5 +12,9 @@ public class InIscrizione implements StatoHackathon{
     @Override
     public String getNomeStato(){
         //TODO Implementare
+    }
+
+    public Hackathon getHackathon(){
+        return hackathon;
     }
 }

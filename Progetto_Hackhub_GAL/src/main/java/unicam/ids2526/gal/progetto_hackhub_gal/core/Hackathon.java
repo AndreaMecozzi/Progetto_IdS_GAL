@@ -4,10 +4,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
-
 @Entity
 public class Hackathon {
 
@@ -18,18 +14,12 @@ public class Hackathon {
     @Column(nullable = false)
     private String nome;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = StatoHackathonConverter.class)
     @Column(nullable = false)
     private StatoHackathon stato;
 
     @Column(nullable = false)
-    private LocalDateTime inizioIscrizione;
-
-    @Column(nullable = false)
-    private LocalDateTime scadenzaIscrizione;
-
-    @Column(nullable = false)
-    private LocalDateTime fineHackathon;
+    private LocalDateTime dataInizioStato;
 
     private Double premio;
 
@@ -57,32 +47,16 @@ public class Hackathon {
         this.nome = nome;
     }
 
-    public StatoHackathon getStato() {
-        return stato;
+    public String getStato() {
+        return stato.getNomeStato();
     }
-    public void setStato(StatoHackathon stato) {
-        this.stato = stato;
-    }
+    public void setStato() { this.stato.cambiaStato(); }
 
-    public LocalDateTime getInizioIscrizione() {
-        return inizioIscrizione;
+    public LocalDateTime getDataInizioStato() {
+        return dataInizioStato;
     }
-    public void setInizioIscrizione(LocalDateTime inizioIscrizione) {
-        this.inizioIscrizione = inizioIscrizione;
-    }
-
-    public LocalDateTime getScadenzaIscrizione() {
-        return scadenzaIscrizione;
-    }
-    public void setScadenzaIscrizione(LocalDateTime scadenzaIscrizione) {
-        this.scadenzaIscrizione = scadenzaIscrizione;
-    }
-
-    public LocalDateTime getFineHackathon() {
-        return fineHackathon;
-    }
-    public void setFineHackathon(LocalDateTime fineHackathon) {
-        this.fineHackathon = fineHackathon;
+    public void setDataInizioStato(LocalDateTime dataInizioStato) {
+        this.dataInizioStato = dataInizioStato;
     }
 
     public Double getPremio() {

@@ -68,7 +68,7 @@ public class SottomissioneHandler {
                 .orElseThrow(() -> new RuntimeException("Hackathon non trovato per questo team"));
 
         try{
-            if(h.getNomeStato().equals("IN_CORSO")){
+            if(h.getStato().equals("IN_CORSO")){
                 sottomissione.setFile(file);
                 sottomissioneRep.save(sottomissione);
             }
