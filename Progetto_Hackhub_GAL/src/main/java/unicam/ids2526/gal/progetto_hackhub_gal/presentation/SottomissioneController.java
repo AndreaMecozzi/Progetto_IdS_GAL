@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.SottomissioneHandler;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Team;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.Utente;
 
 import java.io.File;
 
@@ -22,9 +23,10 @@ public class SottomissioneController {
 
     @PreAuthorize("hasAuthority('UTENTE')")
     @PostMapping("/creaSottomisione")
-    public ResponseEntity<Object> creaSottomissione(@RequestBody Team team){
+    public ResponseEntity<Object> creaSottomissione(Authentication authentication){
+        String username = authentication.getName();
         try{
-            sottomissioneHandler.creaSottomissione(team);
+            sottomissioneHandler.creaSottomissione(username);
             return new ResponseEntity<Object>("Sottomissione creata", HttpStatus.CREATED);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -32,10 +34,11 @@ public class SottomissioneController {
     }
 
     @PreAuthorize("hasAuthority('UTENTE')")
-    @PutMapping("/aggiorna/{nomeTeam}")
-    public ResponseEntity<Object> aggiornaSottomissione(@PathVariable String nomeTeam, @RequestBody File file) {
+    @PostMapping("/aggiorna")
+    public ResponseEntity<Object> aggiornaSottomissione(Authentication authentication, @RequestBody File file) {
+        String username = authentication.getName();
         try {
-            sottomissioneHandler.aggiornaSottomissione(nomeTeam, file);
+            sottomissioneHandler.aggiornaSottomissione(username, file);
             return new ResponseEntity<>("Sottomissione aggiornata con il nuovo file", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Sottomissione;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Team;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.HackathonRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.SottomissioneRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
@@ -24,16 +25,16 @@ public class SottomissioneHandler {
     /**
      * Crea una nuova sottomissione per un team specifico
      *
-     * @param team l'oggetto Team che intende effettuare la sottomissione
+     * @param username l'utente autenticato che crea la sottomissione
      * @throws Exception se il team fornito non esiste nel database
      */
 
-    public void creaSottomissione(Team team) throws Exception {
-        Team t = teamRep.findById(team.getTeamId()).orElseThrow(
-                () -> new Exception("Errore: Team non esistente"));
+    public void creaSottomissione(String username) throws Exception {
+        Team t = teamRep.findByUtenti_Username(username).orElseThrow(
+                () -> new Exception("Errore: Devi fare parte di un team"));
 
         // Creazione dell'entità sottomissione legata al team trovato
-        Sottomissione sottomissione = new Sottomissione(t.getNome(), t);
+        Sottomissione sottomissione = new Sottomissione(t);
         // Aggiunge la sottomissione al team
         t.setSottomissioni(sottomissione);
         sottomissioneRep.save(sottomissione);
@@ -43,7 +44,7 @@ public class SottomissioneHandler {
     /**
      * Aggiorna una sottomissione esistente aggiungendo o modificando il file allegato
      *
-     * @param nomeTeam l'oggetto Team di cui si vuole aggiornare la sottomissione
+     * @param username l'utente autenticato che aggiorna la sottomissione
      * @param file il nuovo documento/file da associare alla sottomissione
      * @throws Exception se non viene trovata alcuna sottomissione precedente per il team indicato
      */
@@ -51,16 +52,15 @@ public class SottomissioneHandler {
 
     //AL POSTO DI FILE ANDREBBE CREATA UNA CLASSE "Document" PER POTER USARE @OneToOne, perche appunto
     //@OneToOne punta a un entità, cosa che java.io.File non è
-    public void aggiornaSottomissione(String nomeTeam, File file) throws Exception {
+    public void aggiornaSottomissione(String username, File file) throws Exception {
         // Cerca la sottomissione esistente per il team
-        Sottomissione sottomissione = sottomissioneRep.findByTeamNome(nomeTeam).orElseThrow(
+        Team t = teamRep.findByUtenti_Username(username).orElseThrow(
+                () -> new Exception("Errore: Devi fare parte di un team"));
+
+        Sottomissione sottomissione = sottomissioneRep.findByTeamNome(t.getNome()).orElseThrow(
                 () -> new Exception("Errore: Nessuna sottomissione trovata per questo team"));
 
-        sottomissione.setFile(file);
-        sottomissioneRep.save(sottomissione);
-
-
-        Long teamId = sottomissione.getTeam().getTeamId(); ;
+        Long teamId = sottomissione.getTeam().getTeamId();
 
         Hackathon h = teamRep.findHackathonByTeamId(teamId)
                 .orElseThrow(() -> new RuntimeException("Hackathon non trovato per questo team"));
@@ -73,6 +73,10 @@ public class SottomissioneHandler {
         }catch(Exception e){
             throw new Exception("Errore: impossibile aggiornare la sottomissione");
         }
+
+        sottomissione.setFile(file);
+        sottomissioneRep.save(sottomissione);
+
 
     }
 

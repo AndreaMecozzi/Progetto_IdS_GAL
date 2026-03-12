@@ -27,8 +27,8 @@ public class Sottomissione {
     // Costruttori
     public Sottomissione(){}
 
-    public Sottomissione(String nome, Team team){
-        this.nome= nome;
+    public Sottomissione(Team team){
+        this.nome= "Sottomissione di " + team.getNome();
         this.team= team;
     }
 
