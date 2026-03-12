@@ -18,31 +18,16 @@ public class TeamHandler {
     }
 
     /**
-     *restituisce le info di un team dato il suo nome,
-     * e verifica che l'utente che fa la richiesta sia membro del team
+     * Restituisce le info del team di cui fa parte l'utente che esegue la richiesta
      *
-     * @param username l'username dell'utente che fa la richiesta estratto dal JWT
-     * @param nomeTeam il nome del team di cui vuoi visualizzare le info
+     * @param username l'username dell'utente che vuole visualizzare le info del proprio team
      * @return team
      * @throws Exception se il team non esiste o l'utente non è membro del team
      */
 
-    public Team visualizzaTeam(String username , String nomeTeam) throws Exception{
-        Team team = teamRep.findByNome(nomeTeam)
-                .orElseThrow(()->new Exception("team non trovato"));
-
-        //verifica che l'utente che fa la richiesta sia membro del team
-        /*
-        team.getUtenti()  -> retituisce la lista degli utenti del team
-        stream()          -> converto la lista in uno stream (cosi posso fare delle operazioni)
-        anyMatch(... )    -> scorre gli utenti e controlla se il suo username è uguale a quello del JWT
-                             se lo trova restituisce true
-         */
-        boolean isMembro = team.getUtenti().stream().anyMatch(u -> u.getUsername().equals(username));
-
-        if (!isMembro) {
-            throw new Exception("non sei un membro di questo team");
-        }
+    public Team visualizzaTeam(String username) throws Exception{
+        Team team = teamRep.findByUtenti_Username(username)
+                .orElseThrow(()->new Exception("Errore: Non appartieni a nessun team"));
 
         return team;
 

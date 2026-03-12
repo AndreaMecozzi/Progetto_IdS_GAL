@@ -21,14 +21,14 @@ public class TeamController {
     }
 
     @PreAuthorize("hasAuthority('UTENTE')")
-    @GetMapping("/visualizzaInfoTeam/{nomeTeam}")
-    public ResponseEntity<Object> visualizzaInfoTeam(Authentication authentication , @PathVariable String nomeTeam) {
+    @GetMapping("/visualizzaInfoTeam")
+    public ResponseEntity<Object> visualizzaInfoTeam(Authentication authentication) {
         try{
             //estraggo dal JWT l'username
             String username = authentication.getName();
 
-            //chiama il metodo dell'handler passando l'username e il nome del team
-            Team team = teamHandler.visualizzaTeam(username,nomeTeam);
+            //chiama il metodo dell'handler passando l'username
+            Team team = teamHandler.visualizzaTeam(username);
             return new ResponseEntity<>(team, HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
