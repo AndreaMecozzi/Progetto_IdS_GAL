@@ -2,10 +2,12 @@ package unicam.ids2526.gal.progetto_hackhub_gal.application;
 
 import org.springframework.stereotype.Service;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Team;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class TeamHandler {
@@ -15,6 +17,27 @@ public class TeamHandler {
     public TeamHandler(TeamRepository teamRepository, UtenteRepository utenteRep) {
         this.teamRep = teamRepository;
         this.utenteRep = utenteRep;
+    }
+
+    /**
+     * Crea un nuovo team a partire dal nome specificato dall'utente
+     *
+     * @param username l'utente che vuole creare il nuovo team
+     * @param nomeTeam il nome del team che deve essere creato
+     * @throws Exception se qualche condizione non viene rispettata
+     */
+    public void creaTeam(String username, String nomeTeam) throws Exception{
+        if(teamRep.findByUtenti_Username(username).isPresent()){
+            throw new Exception("Errore: Fai già parte di un team");
+        }
+
+        if(teamRep.findByNome(nomeTeam).isPresent()){
+            throw new Exception("Errore: Esiste già un team con il nome passato");
+        }
+
+        Utente utente=utenteRep.findByUsername(username).orElseThrow();
+        Team team = new Team(nomeTeam, utente);
+        teamRep.save(team);
     }
 
     /**

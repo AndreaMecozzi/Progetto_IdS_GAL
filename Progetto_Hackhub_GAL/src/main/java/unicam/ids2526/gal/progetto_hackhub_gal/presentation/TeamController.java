@@ -4,10 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.TeamHandler;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.Team;
 
@@ -18,6 +15,18 @@ public class TeamController {
 
     public TeamController(TeamHandler teamHandler) {
         this.teamHandler = teamHandler;
+    }
+
+    @PreAuthorize("hasAuthority('UTENTE')")
+    @PostMapping("/creaTeam")
+    public ResponseEntity<Object> creaTeam(Authentication authentication, @RequestBody String nomeTeam) {
+        String username= authentication.getName();
+        try{
+            teamHandler.creaTeam(username, nomeTeam);
+            return new ResponseEntity<>("Team creato con successo", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PreAuthorize("hasAuthority('UTENTE')")

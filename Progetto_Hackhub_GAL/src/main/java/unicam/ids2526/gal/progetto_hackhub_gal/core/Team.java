@@ -29,9 +29,10 @@ public class Team {
 
     public Team() {}
 
-    public Team(String nome) {
+    public Team(String nome, Utente utente) {
         this.nome=nome;
         this.utenti=new ArrayList<>();
+        this.utenti.add(utente);
         this.hackathon=null;
         this.sottomissione=null;
     }
@@ -64,8 +65,8 @@ public class Team {
         return utenti;
     }
 
-    public void setUtenti(List<Utente> utenti) {
-        this.utenti = utenti;
+    public void addUtente(Utente utente) {
+        this.utenti.add(utente);
     }
 
     public Sottomissione getSottomissioni() {
