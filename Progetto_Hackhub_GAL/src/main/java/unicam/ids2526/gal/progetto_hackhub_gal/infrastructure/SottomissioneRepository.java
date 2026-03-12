@@ -16,6 +16,6 @@ public interface SottomissioneRepository extends JpaRepository<Sottomissione, Lo
      */
     Optional<Sottomissione> findByTeamNome(String nometeam);
 
-    Optional<Sottomissione> findByTeamTeamId(Long teamId);
+    Optional<Sottomissione> findByTeam_TeamId(Long teamId);
 
 }

@@ -89,7 +89,7 @@ public class SottomissioneHandler {
 
         Long teamId= team.getTeamId();
 
-        return sottomissioneRep.findByTeamTeamId(teamId).orElseThrow(
+        return sottomissioneRep.findByTeam_TeamId(teamId).orElseThrow(
                 () -> new Exception("Errore: la sottomissione non esiste"));
     }
 }
