@@ -1,19 +1,26 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.core;
 
+import java.time.LocalDateTime;
+
+/**
+ * Rappresenta lo stato "In valutazione" dell'hackathon. La sua durata è di 14 giorni
+ * e durante questo periodo il giudice valuta le sottomissioni caricate
+ */
 public class InValutazione implements StatoHackathon{
 
     private Hackathon hackathon;
     @Override
     public void cambiaStato(){
-        //TODO Implementare
+        if(LocalDateTime.now().isAfter(LocalDateTime.now().plusDays(14))){
+            StatoHackathon inCorso=new InCorso();
+            hackathon.setStato(inCorso);
+            hackathon.setDataInizioStato(LocalDateTime.now());
+        }
     }
 
     @Override
     public String getNomeStato(){
-        //TODO Implementare
+        return "IN_VALUTAZIONE";
     }
 
-    public Hackathon getHackathon(){
-        return hackathon;
-    }
 }

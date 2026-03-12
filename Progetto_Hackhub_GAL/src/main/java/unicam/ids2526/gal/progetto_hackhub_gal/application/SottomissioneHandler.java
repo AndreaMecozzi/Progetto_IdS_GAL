@@ -15,12 +15,10 @@ public class SottomissioneHandler {
 
     private final SottomissioneRepository sottomissioneRep;
     private final TeamRepository teamRep;
-    private final HackathonRepository hackathonRep;
 
     public SottomissioneHandler(SottomissioneRepository sottomissioneRep, TeamRepository teamRep,HackathonRepository hackathonRep) {
         this.sottomissioneRep = sottomissioneRep;
         this.teamRep = teamRep;
-        this.hackathonRep = hackathonRep;
     }
 
     /**

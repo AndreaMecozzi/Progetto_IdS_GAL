@@ -1,20 +1,21 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.core;
 
+/**
+ * Rappresenta lo stato "Concluso" dell'hackathon. La durata di questo stato è permanente
+ * ed all'interno di esso non è possibile svolgere alcuna operazione
+ */
 public class Concluso implements StatoHackathon{
 
     private Hackathon hackathon;
 
     @Override
     public void cambiaStato(){
-        //TODO Implementare
+        /// Un hackathon concluso non cambia stato
     }
 
     @Override
     public String getNomeStato(){
-        //TODO Implementare
+        return "CONCLUSO";
     }
 
-    public Hackathon getHackathon(){
-        return hackathon;
-    }
 }
