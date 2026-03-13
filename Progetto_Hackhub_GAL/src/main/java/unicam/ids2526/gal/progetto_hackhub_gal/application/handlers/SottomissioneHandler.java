@@ -1,6 +1,7 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Sottomissione;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
@@ -9,6 +10,9 @@ import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.SottomissioneRepos
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 @Service
 public class SottomissioneHandler {
@@ -32,6 +36,12 @@ public class SottomissioneHandler {
         Team t = teamRep.findByUtenti_Username(username).orElseThrow(
                 () -> new Exception("Errore: Devi fare parte di un team"));
 
+        // 2. Controllo esistenza sottomissione per questo team
+        // Supponendo che sottomissioneRep abbia un metodo per cercare per Team
+        if (sottomissioneRep.existsByTeam(t)) {
+            throw new Exception("Sottomissione già esistente");
+        }
+
         // Creazione dell'entità sottomissione legata al team trovato
         Sottomissione sottomissione = new Sottomissione(t);
         // Aggiunge la sottomissione al team
@@ -51,7 +61,7 @@ public class SottomissioneHandler {
 
     //AL POSTO DI FILE ANDREBBE CREATA UNA CLASSE "Document" PER POTER USARE @OneToOne, perche appunto
     //@OneToOne punta a un entità, cosa che java.io.File non è
-    public void aggiornaSottomissione(String username, File file) throws Exception {
+    public void aggiornaSottomissione(String username, MultipartFile file) throws Exception {
         // Cerca la sottomissione esistente per il team
         Team t = teamRep.findByUtenti_Username(username).orElseThrow(
                 () -> new Exception("Errore: Devi fare parte di un team"));
@@ -66,7 +76,25 @@ public class SottomissioneHandler {
 
         try{
             if(h.getStato().equals("IN_CORSO")){
-                sottomissione.setFile(file);
+                if(file==null||file.isEmpty()){
+                    System.out.println(file);
+                    throw new Exception("file non valido");
+                }
+                if(!file.getOriginalFilename().endsWith(".zip")){
+                    throw new Exception("Formato del file non valido");
+                }
+                File fileSottomissione=new File("src/main/resources/static/sottomissioni/"+regolamento.getOriginalFilename());
+                try{
+                    regolamentoFile.createNewFile();
+                    FileOutputStream fileStream = new FileOutputStream(regolamentoFile);
+                    fileStream.write(regolamento.getBytes());
+                    fileStream.close();
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e){
+                    throw new RuntimeException(e);
+                }
+                sottomissione.setFile(file.getPath());
                 sottomissioneRep.save(sottomissione);
             }
         }catch(Exception e){

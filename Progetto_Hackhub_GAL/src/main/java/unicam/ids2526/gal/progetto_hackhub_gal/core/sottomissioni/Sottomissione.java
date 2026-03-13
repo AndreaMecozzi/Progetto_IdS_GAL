@@ -19,7 +19,7 @@ public class Sottomissione {
      */
     //@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file", referencedColumnName = "id")
-    private File file;
+    private String file;
 
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
@@ -42,9 +42,9 @@ public class Sottomissione {
 
     public void setNome(String nome) { this.nome = nome; }
 
-    public File getFile() { return file; }
+    public String getFile() { return file; }
 
-    public void setFile(File file) { this.file = file; }
+    public void setFile(String file) { this.file = file; }
 
     public Team getTeam() {
         return team;

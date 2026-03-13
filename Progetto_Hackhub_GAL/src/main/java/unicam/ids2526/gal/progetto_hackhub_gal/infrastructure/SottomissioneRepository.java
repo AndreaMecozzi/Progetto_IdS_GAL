@@ -3,6 +3,7 @@ package unicam.ids2526.gal.progetto_hackhub_gal.infrastructure;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Sottomissione;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 
 import java.util.Optional;
 
@@ -16,4 +17,5 @@ public interface SottomissioneRepository extends JpaRepository<Sottomissione, Lo
 
     Optional<Sottomissione> findByTeam_TeamId(Long teamId);
 
+    boolean existsByTeam(Team t);
 }

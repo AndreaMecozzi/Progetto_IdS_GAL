@@ -1,6 +1,7 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.presentation;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -30,8 +31,9 @@ public class SottomissioneController {
         }
     }
 
+
     @PreAuthorize("hasAuthority('UTENTE')")
-    @PostMapping("/aggiorna")
+    @PostMapping(name = "/aggiorna", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Object> aggiornaSottomissione(Authentication authentication, @RequestBody File file) {
         String username = authentication.getName();
         try {
@@ -41,6 +43,8 @@ public class SottomissioneController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+
 
     @PreAuthorize("hasAuthority('UTENTE')")
     @GetMapping("/visualizza")
