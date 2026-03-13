@@ -72,11 +72,11 @@ public class Team {
         this.utenti.add(utente);
     }
 
-    public Sottomissione getSottomissioni() {
+    public Sottomissione getSottomissione() {
         return sottomissione;
     }
 
-    public void setSottomissioni(Sottomissione sottomissione) {
+    public void setSottomissione(Sottomissione sottomissione) {
         this.sottomissione = sottomissione;
     }
 }

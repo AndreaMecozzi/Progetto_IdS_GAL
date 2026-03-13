@@ -1,8 +1,10 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon;
 
 import jakarta.persistence.*;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Hackathon {
@@ -11,7 +13,7 @@ public class Hackathon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long hackathonID;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String nome;
 
     @Convert(converter = StatoHackathonConverter.class)
@@ -21,16 +23,44 @@ public class Hackathon {
     @Column(nullable = false)
     private LocalDateTime dataInizioStato;
 
+    @Column(nullable = false)
     private Double premio;
 
+    @Column(nullable = false)
     private int dimenisoneTeam; // Mantengo il refuso "dimenisone" come da diagramma
 
+    @Column(nullable = false)
     private String regolamento;
+
+    @ManyToOne
+    @JoinColumn(name = "creatore_id", nullable = false)
+    private Utente organizzatore;
+
+    @ManyToMany
+    @JoinTable(
+            name = "hackathon_mentori", // Nome della tabella intermedia che creerà il DB
+            joinColumns = @JoinColumn(name = "hackathon_id"), // Colonna verso l'Hackathon
+            inverseJoinColumns = @JoinColumn(name = "mentore_id") // Colonna verso l'Utente (Mentore)
+    )
+    private List<Utente> mentore;
+
+    @ManyToOne
+    @JoinColumn(name="giudice_id", nullable = false)
+    private Utente giudice;
 
     // Costruttore di default richiesto da JPA
     public Hackathon() {
     }
 
+    public Hackathon(String nome, Double premio, int dimenisoneTeam,
+                     String regolamento, Utente organizzatore) {
+        this.nome = nome;
+        this.premio = premio;
+        this.dataInizioStato = LocalDateTime.now();
+        this.dimenisoneTeam = dimenisoneTeam;
+        this.regolamento = regolamento;
+        this.organizzatore = organizzatore;
+    }
 
     // Getter e Setter
     public Long getHackathonID() {

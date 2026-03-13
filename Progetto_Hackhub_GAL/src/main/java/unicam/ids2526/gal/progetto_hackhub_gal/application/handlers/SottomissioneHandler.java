@@ -35,7 +35,7 @@ public class SottomissioneHandler {
         // Creazione dell'entità sottomissione legata al team trovato
         Sottomissione sottomissione = new Sottomissione(t);
         // Aggiunge la sottomissione al team
-        t.setSottomissioni(sottomissione);
+        t.setSottomissione(sottomissione);
         sottomissioneRep.save(sottomissione);
         teamRep.save(t);
     }
