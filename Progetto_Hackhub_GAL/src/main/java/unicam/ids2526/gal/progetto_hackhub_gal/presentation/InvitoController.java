@@ -47,4 +47,29 @@ public class InvitoController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PreAuthorize("hasAuthority('UTENTE')")
+    @PostMapping("/gestisci/{idInvito}")
+    public ResponseEntity<Object> gestisciInvito( Authentication authentication, @PathVariable Long invitoId, @RequestParam boolean esito) {
+
+        String username = authentication.getName();
+
+        try {
+            invitoHandler.gestisciInvito(username, invitoId, esito);
+
+            // dichiarazione e inizializzazione del messaggio di risposta
+            String messaggioRisposta;
+
+            if (esito) {
+                messaggioRisposta = "Invito accettato con successo. Sei stato aggiunto al team!";
+            } else {
+                messaggioRisposta = "Invito rifiutato.";
+            }
+
+            return new ResponseEntity<>(messaggioRisposta, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

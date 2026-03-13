@@ -1,5 +1,6 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.core.team;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Sottomissione;
@@ -26,6 +27,7 @@ public class Team {
     @ManyToOne
     @JoinColumn(name="hackathon_id")
     private Hackathon hackathon;
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name="sottomissione_id")
     private Sottomissione sottomissione;

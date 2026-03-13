@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.SottomissioneHandler;
 
 import java.io.File;
@@ -33,8 +34,8 @@ public class SottomissioneController {
 
 
     @PreAuthorize("hasAuthority('UTENTE')")
-    @PostMapping(name = "/aggiorna", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Object> aggiornaSottomissione(Authentication authentication, @RequestBody File file) {
+    @PostMapping(value = "/aggiorna", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Object> aggiornaSottomissione(Authentication authentication, @RequestParam MultipartFile file) {
         String username = authentication.getName();
         try {
             sottomissioneHandler.aggiornaSottomissione(username, file);
@@ -43,6 +44,8 @@ public class SottomissioneController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+
 
 
 

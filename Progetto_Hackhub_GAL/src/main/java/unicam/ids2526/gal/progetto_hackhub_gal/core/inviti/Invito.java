@@ -69,4 +69,8 @@ public class Invito {
     public void setRicevente(Utente ricevente) {
         this.ricevente = ricevente;
     }
+
+    public EsitoInvito getEsitoInvito() { return esitoInvito; }
+
+    public void setEsitoInvito(EsitoInvito esitoInvito) { this.esitoInvito = esitoInvito; }
 }

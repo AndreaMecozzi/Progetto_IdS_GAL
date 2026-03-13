@@ -1,7 +1,9 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 
 import org.springframework.stereotype.Service;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.EsitoInvito;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.Invito;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Ruolo;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.InvitoRepository;
@@ -87,5 +89,50 @@ public class InvitoHandler {
         }else{
             return inviti;
         }
+    }
+
+    /**
+     * Gestisce l'accettazione o il rifiuto di un invito da parte di un utente.
+     *
+     * @param username l'utente che sta gestendo l'invito (deve essere il destinatario)
+     * @param invitoId l'ID dell'invito da gestire
+     * @param esito true se l'utente accetta, false se rifiuta
+     * @throws Exception se l'invito non esiste, non appartiene all'utente o è già stato gestito
+     */
+    public void gestisciInvito(String username, Long invitoId, boolean esito) throws Exception {
+
+        // recupero dell'invito tramite il suo Idr
+        Invito invito = invitoRep.findById(invitoId).orElseThrow(
+                () -> new Exception("Errore: Invito non trovato"));
+
+        // controllo sulla validità dell'invito
+        if (invito.getEsitoInvito() != EsitoInvito.INVIATO) {
+            throw new Exception("Errore: Questo invito è già stato gestito in precedenza.");
+        }
+
+        // scelta dell'esito: accettato o rifiutato
+        if (esito) {
+            // aggiornato lo stato dell'invito in "ACCETTATO"
+            invito.setEsitoInvito(EsitoInvito.ACCETTATO);
+
+            // trasformato il ricevente in membro del team di cui ora fa parte
+            Utente mittente = invito.getMittente();
+            Team t = teamRep.findByUtenti_Username(mittente.getUsername()).orElseThrow(
+                    ()->new Exception("Errore: L'utente non fa parte di un team"));
+
+            // Prendo l'utente da inserire nel team
+            Utente ricevente = invito.getRicevente();
+
+            // Aggiungo l'utente alla lista dei membri del team
+            t.getUtenti().add(ricevente);
+
+            teamRep.save(t);
+
+        } else {
+            // aggiornato lo stato dell'invito in "RIFIUTATO"
+            invito.setEsitoInvito(EsitoInvito.RIFIUTATO);
+        }
+
+        invitoRep.save(invito);
     }
 }

@@ -30,8 +30,6 @@ public class HackathonHandler {
     public void creaHackathon(String nomeHackathon, Double premio,
                               Integer dimensioneTeam, MultipartFile regolamento,
                               String userOrg, String userGiudice, List<String> usersMentori) throws Exception {
-        //TODO implementare giudice e mentori
-
         /// Validazione della richiesta
         if(hackathonRep.findByNome(nomeHackathon).isPresent()||nomeHackathon.isEmpty()){
             throw new Exception("Nome per l'hackathon non valido");

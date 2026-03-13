@@ -36,10 +36,15 @@ public class SottomissioneHandler {
         Team t = teamRep.findByUtenti_Username(username).orElseThrow(
                 () -> new Exception("Errore: Devi fare parte di un team"));
 
-        // 2. Controllo esistenza sottomissione per questo team
-        // Supponendo che sottomissioneRep abbia un metodo per cercare per Team
+        // controllo esistenza sottomissione per questo team
         if (sottomissioneRep.existsByTeam(t)) {
             throw new Exception("Sottomissione già esistente");
+        }
+
+        // ricava l'hackathon a cui il team partecipa
+        Hackathon h = t.getHackathon();
+        if (h == null) {
+            throw new RuntimeException("Hackathon non trovato per questo team");
         }
 
         // Creazione dell'entità sottomissione legata al team trovato
@@ -58,22 +63,25 @@ public class SottomissioneHandler {
      * @throws Exception se non viene trovata alcuna sottomissione precedente per il team indicato
      */
 
-
-    //AL POSTO DI FILE ANDREBBE CREATA UNA CLASSE "Document" PER POTER USARE @OneToOne, perche appunto
-    //@OneToOne punta a un entità, cosa che java.io.File non è
     public void aggiornaSottomissione(String username, MultipartFile file) throws Exception {
-        // Cerca la sottomissione esistente per il team
+        // cerca il team relativo all'utente che vuole aggiornare la sottomissione
         Team t = teamRep.findByUtenti_Username(username).orElseThrow(
                 () -> new Exception("Errore: Devi fare parte di un team"));
 
+        // recupera la sottomissione
         Sottomissione sottomissione = sottomissioneRep.findByTeamNome(t.getNome()).orElseThrow(
                 () -> new Exception("Errore: Nessuna sottomissione trovata per questo team"));
 
+        // ricava l'id del team
         Long teamId = sottomissione.getTeam().getTeamId();
 
-        Hackathon h = teamRep.findHackathonByTeamId(teamId)
-                .orElseThrow(() -> new RuntimeException("Hackathon non trovato per questo team"));
+        // ricava l'hackathon a cui il team partecipa
+        Hackathon h = t.getHackathon();
+        if (h == null) {
+            throw new RuntimeException("Hackathon non trovato per questo team");
+        }
 
+        // verifica sullo stato dell'Hackathon e sul formato del file che si vuole aggiungere
         try{
             if(h.getStato().equals("IN_CORSO")){
                 if(file==null||file.isEmpty()){
@@ -83,28 +91,30 @@ public class SottomissioneHandler {
                 if(!file.getOriginalFilename().endsWith(".zip")){
                     throw new Exception("Formato del file non valido");
                 }
-                File fileSottomissione=new File("src/main/resources/static/sottomissioni/"+regolamento.getOriginalFilename());
+                // creato il file specificando il percorso e il nome
+                File fileSottomissione= new File("src/main/resources/static/sottomissioni/"+file.getOriginalFilename());
+
+                if (!fileSottomissione.getParentFile().exists()) {
+                    fileSottomissione.getParentFile().mkdirs();
+                }
+
                 try{
-                    regolamentoFile.createNewFile();
-                    FileOutputStream fileStream = new FileOutputStream(regolamentoFile);
-                    fileStream.write(regolamento.getBytes());
+                    fileSottomissione.createNewFile();
+                    FileOutputStream fileStream = new FileOutputStream(fileSottomissione);
+                    fileStream.write(file.getBytes());
                     fileStream.close();
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e){
                     throw new RuntimeException(e);
                 }
-                sottomissione.setFile(file.getPath());
+                // assegnazione del file alla sottomissione e salvataggio
+                sottomissione.setFile(fileSottomissione.getPath());
                 sottomissioneRep.save(sottomissione);
             }
         }catch(Exception e){
             throw new Exception("Errore: impossibile aggiornare la sottomissione");
         }
-
-        sottomissione.setFile(file);
-        sottomissioneRep.save(sottomissione);
-
-
     }
 
     /**
