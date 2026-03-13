@@ -53,13 +53,16 @@ public class Hackathon {
     }
 
     public Hackathon(String nome, Double premio, int dimenisoneTeam,
-                     String regolamento, Utente organizzatore) {
+                     String regolamento, Utente organizzatore, Utente  giudice, List<Utente> mentore) {
+        //TODO implementare inizializzazione di mentori e giudice
         this.nome = nome;
         this.premio = premio;
         this.dataInizioStato = LocalDateTime.now();
         this.dimenisoneTeam = dimenisoneTeam;
         this.regolamento = regolamento;
         this.organizzatore = organizzatore;
+        this.giudice = giudice;
+        this.mentore = mentore;
     }
 
     // Getter e Setter

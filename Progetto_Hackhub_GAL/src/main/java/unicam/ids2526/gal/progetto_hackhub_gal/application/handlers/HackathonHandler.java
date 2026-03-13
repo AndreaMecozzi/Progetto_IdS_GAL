@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.InIscrizione;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.StatoHackathon;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Ruolo;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.HackathonRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
@@ -13,6 +14,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class HackathonHandler {
@@ -26,7 +29,7 @@ public class HackathonHandler {
 
     public void creaHackathon(String nomeHackathon, Double premio,
                               Integer dimensioneTeam, MultipartFile regolamento,
-                              String username) throws Exception {
+                              String userOrg, String userGiudice, List<String> usersMentori) throws Exception {
         //TODO implementare giudice e mentori
 
         /// Validazione della richiesta
@@ -52,6 +55,25 @@ public class HackathonHandler {
             throw new Exception("Formato del regolamento non valido");
         }
 
+        Utente giudice = utenteRep.findByUsername(userGiudice).orElseThrow(
+                () -> new Exception("Giudice non esistente")
+        );
+
+        if(giudice.getRuolo()!= Ruolo.GIUDICE){
+            throw new Exception("Il giudice deve avere il ruolo GIUDICE");
+        }
+
+        List<Utente> mentori= new ArrayList<>() {
+        };
+        for(String user: usersMentori){
+            Utente mentore=utenteRep.findByUsername(user).orElseThrow(
+                    () -> new Exception("Mentore non esistente"));
+            if(mentore.getRuolo()!=Ruolo.MENTORE){
+                throw new Exception("Il mentore deve avere il ruolo MENTORE");
+            }
+            mentori.add(mentore);
+        }
+
         /// Creazione dell'hackathon
         File regolamentoFile=new File("src/main/resources/static/regolamenti/"+regolamento.getOriginalFilename());
         try{
@@ -65,8 +87,10 @@ public class HackathonHandler {
             throw new RuntimeException(e);
         }
 
-        Utente organizzatore=utenteRep.findByUsername(username).orElseThrow();
-        Hackathon hackathon=new Hackathon(nomeHackathon, premio, dimensioneTeam, regolamentoFile.getPath(), organizzatore);
+        Utente organizzatore=utenteRep.findByUsername(userOrg).orElseThrow();
+
+        Hackathon hackathon=new Hackathon(nomeHackathon, premio, dimensioneTeam, regolamentoFile.getPath(),
+                organizzatore, giudice, mentori);
         StatoHackathon stato=new InIscrizione();
         hackathon.setStato(stato);
         hackathonRep.save(hackathon);

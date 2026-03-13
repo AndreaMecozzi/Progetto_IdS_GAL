@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.dto.CreaHackathonDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.HackathonHandler;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/hackathon")
 public class HackathonController {
@@ -27,11 +29,13 @@ public class HackathonController {
         Double premio = creaDTO.getPremio();
         Integer dimensioneTeam= creaDTO.getDimensioneTeam();
         MultipartFile regolamento= creaDTO.getRegolamento();
-        String username=authentication.getName();
-        //TODO implementare giudice e mentori
+        String userOrg=authentication.getName();
+        String userGiudice=creaDTO.getGiudice();
+        List<String> usersMentori=creaDTO.getMentori();
 
         try{
-            hackathonHandler.creaHackathon(nomeHackhathon, premio, dimensioneTeam, regolamento, username);
+            hackathonHandler.creaHackathon(nomeHackhathon, premio, dimensioneTeam, regolamento,
+                    userOrg, userGiudice, usersMentori);
             return new ResponseEntity<>("Hackathon creato con successo", HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
