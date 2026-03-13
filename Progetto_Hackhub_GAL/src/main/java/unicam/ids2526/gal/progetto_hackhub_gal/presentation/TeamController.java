@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import unicam.ids2526.gal.progetto_hackhub_gal.application.TeamHandler;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.Team;
+import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.TeamHandler;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 
 @RestController
 @RequestMapping("/team")

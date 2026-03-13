@@ -1,6 +1,9 @@
-package unicam.ids2526.gal.progetto_hackhub_gal.core;
+package unicam.ids2526.gal.progetto_hackhub_gal.core.team;
 
 import jakarta.persistence.*;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Sottomissione;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 
 import java.util.ArrayList;
 import java.util.List;

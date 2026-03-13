@@ -1,6 +1,7 @@
-package unicam.ids2526.gal.progetto_hackhub_gal.core;
+package unicam.ids2526.gal.progetto_hackhub_gal.core.inviti;
 
 import jakarta.persistence.*;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 
 /**
  * Rappresenta un invito che viene inviato tra gli utenti

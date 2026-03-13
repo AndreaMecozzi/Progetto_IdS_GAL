@@ -1,4 +1,4 @@
-package unicam.ids2526.gal.progetto_hackhub_gal.core;
+package unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon;
 
 /**
  * Rappresenta uno "stato" dell'hackathon, ossia un periodo in cui è possibile

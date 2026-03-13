@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import unicam.ids2526.gal.progetto_hackhub_gal.application.InvitoHandler;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.Invito;
+import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.InvitoHandler;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.Invito;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;

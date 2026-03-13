@@ -1,13 +1,10 @@
-package unicam.ids2526.gal.progetto_hackhub_gal.application;
+package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 
 import org.springframework.stereotype.Service;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.Team;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.Utente;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
-
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class TeamHandler {

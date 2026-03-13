@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import unicam.ids2526.gal.progetto_hackhub_gal.application.SottomissioneHandler;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.Hackathon;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.Team;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.Utente;
+import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.SottomissioneHandler;
 
 import java.io.File;
 

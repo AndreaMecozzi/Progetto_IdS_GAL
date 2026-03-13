@@ -1,4 +1,4 @@
-package unicam.ids2526.gal.progetto_hackhub_gal.core;
+package unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon;
 
 /**
  * Rappresenta lo stato "Concluso" dell'hackathon. La durata di questo stato è permanente

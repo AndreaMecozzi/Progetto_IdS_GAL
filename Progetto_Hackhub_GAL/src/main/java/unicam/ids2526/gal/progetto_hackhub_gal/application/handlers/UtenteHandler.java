@@ -1,7 +1,7 @@
-package unicam.ids2526.gal.progetto_hackhub_gal.application;
+package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 
 import org.springframework.stereotype.Service;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.Utente;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.security.JwtUtil;
 import java.util.Optional;
