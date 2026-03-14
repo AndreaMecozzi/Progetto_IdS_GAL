@@ -1,9 +1,11 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon;
 
 import jakarta.persistence.*;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -48,13 +50,15 @@ public class Hackathon {
     @JoinColumn(name="giudice_id", nullable = false)
     private Utente giudice;
 
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Team> teamPartecipanti;
+
     // Costruttore di default richiesto da JPA
     public Hackathon() {
     }
 
     public Hackathon(String nome, Double premio, int dimenisoneTeam,
                      String regolamento, Utente organizzatore, Utente  giudice, List<Utente> mentore) {
-        //TODO implementare inizializzazione di mentori e giudice
         this.nome = nome;
         this.premio = premio;
         this.dataInizioStato = LocalDateTime.now();
@@ -63,6 +67,7 @@ public class Hackathon {
         this.organizzatore = organizzatore;
         this.giudice = giudice;
         this.mentore = mentore;
+        this.teamPartecipanti = new ArrayList<Team>();
     }
 
     // Getter e Setter
@@ -110,4 +115,34 @@ public class Hackathon {
     public String getRegolamento(){return regolamento;}
     public void setRegolamento(String regolamento){this.regolamento=regolamento;}
 
+    public Utente getOrganizzatore() {
+        return organizzatore;
+    }
+    public void setOrganizzatore(Utente organizzatore) {
+        this.organizzatore = organizzatore;
+    }
+
+    public List<Utente> getMentore() {
+        return mentore;
+    }
+    public void setMentore(List<Utente> mentore) {
+        this.mentore = mentore;
+    }
+
+    public Utente getGiudice() {
+        return giudice;
+    }
+    public void setGiudice(Utente giudice) {
+        this.giudice = giudice;
+    }
+
+    public List<Team> getTeamPartecipanti() {
+        return teamPartecipanti;
+    }
+    public void setTeamPartecipanti(List<Team> teamPartecipanti) {
+        this.teamPartecipanti = teamPartecipanti;
+    }
+    public void addTeam(Team team) {
+        this.teamPartecipanti.add(team);
+    }
 }

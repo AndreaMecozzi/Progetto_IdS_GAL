@@ -101,7 +101,7 @@ public class InvitoHandler {
      */
     public void gestisciInvito(String username, Long invitoId, boolean esito) throws Exception {
 
-        // recupero dell'invito tramite il suo Idr
+        // recupero dell'invito tramite il suo Id
         Invito invito = invitoRep.findById(invitoId).orElseThrow(
                 () -> new Exception("Errore: Invito non trovato"));
 

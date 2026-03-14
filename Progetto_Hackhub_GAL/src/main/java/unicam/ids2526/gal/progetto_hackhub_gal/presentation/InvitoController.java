@@ -50,7 +50,7 @@ public class InvitoController {
 
     @PreAuthorize("hasAuthority('UTENTE')")
     @PostMapping("/gestisci/{idInvito}")
-    public ResponseEntity<Object> gestisciInvito( Authentication authentication, @PathVariable Long invitoId, @RequestParam boolean esito) {
+    public ResponseEntity<Object> gestisciInvito(Authentication authentication, @PathVariable Long invitoId, @RequestParam boolean esito) {
 
         String username = authentication.getName();
 

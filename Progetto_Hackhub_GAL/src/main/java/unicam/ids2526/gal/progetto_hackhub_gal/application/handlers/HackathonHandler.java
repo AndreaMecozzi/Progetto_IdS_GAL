@@ -5,9 +5,11 @@ import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.InIscrizione;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.StatoHackathon;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Ruolo;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.HackathonRepository;
+import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
 
 import java.io.File;
@@ -21,10 +23,13 @@ import java.util.List;
 public class HackathonHandler {
     private final HackathonRepository hackathonRep;
     private final UtenteRepository  utenteRep;
+    private final TeamRepository teamRep;
 
-    public HackathonHandler(HackathonRepository hackathonRep, UtenteRepository utenteRep) {
+    public HackathonHandler(HackathonRepository hackathonRep, UtenteRepository utenteRep,
+                            TeamRepository teamRep) {
         this.hackathonRep = hackathonRep;
         this.utenteRep = utenteRep;
+        this.teamRep = teamRep;
     }
 
     public void creaHackathon(String nomeHackathon, Double premio,
@@ -92,5 +97,27 @@ public class HackathonHandler {
         StatoHackathon stato=new InIscrizione();
         hackathon.setStato(stato);
         hackathonRep.save(hackathon);
+    }
+
+    public void iscriviTeam(String username, String nomeHackathon) throws Exception {
+        Team team=teamRep.findByUtenti_Username(username).orElseThrow(
+                ()->new Exception("Bisogna avere un team per iscriversi"));
+
+        Hackathon hackathon=hackathonRep.findByNome(nomeHackathon).orElseThrow(
+                ()->new Exception("Hackathon non esistente"));
+
+        if(!hackathon.getStato().equals("IN_ISCRIZIONE")){
+            throw new Exception("Il periodo di iscrizione è terminato");
+        }
+
+        if(hackathon.getDimenisoneTeam()<team.getUtenti().size()){
+            throw new Exception("Dimensione del team non adatta per l'iscrizione");
+        }
+
+        hackathon.addTeam(team);
+        hackathonRep.save(hackathon);
+
+        team.setHackathon(hackathon);
+        teamRep.save(team);
     }
 }

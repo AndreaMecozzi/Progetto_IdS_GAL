@@ -41,4 +41,16 @@ public class HackathonController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PreAuthorize("hasAuthority('UTENTE')")
+    @PostMapping("/iscrivi")
+    public ResponseEntity<Object> iscriviTeam(Authentication authentication, @RequestBody String nomeHackathon){
+        String username=authentication.getName();
+        try{
+            hackathonHandler.iscriviTeam(username, nomeHackathon);
+            return new ResponseEntity<>("Team iscritto con successo",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
