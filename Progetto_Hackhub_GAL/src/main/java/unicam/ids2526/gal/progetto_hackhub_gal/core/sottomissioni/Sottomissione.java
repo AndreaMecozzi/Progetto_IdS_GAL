@@ -31,6 +31,7 @@ public class Sottomissione {
     public Sottomissione(Team team){
         this.nome= "Sottomissione di " + team.getNome();
         this.team= team;
+        this.file=null;
     }
 
     // Getter & Setter

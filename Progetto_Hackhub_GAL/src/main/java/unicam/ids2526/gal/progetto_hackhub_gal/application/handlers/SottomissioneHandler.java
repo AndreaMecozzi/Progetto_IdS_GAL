@@ -78,7 +78,7 @@ public class SottomissioneHandler {
         // ricava l'hackathon a cui il team partecipa
         Hackathon h = t.getHackathon();
         if (h == null) {
-            throw new RuntimeException("Hackathon non trovato per questo team");
+            throw new RuntimeException("Errore: Hackathon non trovato per questo team");
         }
 
         // verifica sullo stato dell'Hackathon e sul formato del file che si vuole aggiungere
@@ -86,10 +86,10 @@ public class SottomissioneHandler {
             if(h.getStato().equals("IN_CORSO")){
                 if(file==null||file.isEmpty()){
                     System.out.println(file);
-                    throw new Exception("file non valido");
+                    throw new Exception("Errore: File non valido");
                 }
                 if(!file.getOriginalFilename().endsWith(".zip")){
-                    throw new Exception("Formato del file non valido");
+                    throw new Exception("Errore: Formato del file non valido");
                 }
                 // creato il file specificando il percorso e il nome
                 File fileSottomissione= new File("src/main/resources/static/sottomissioni/"+file.getOriginalFilename());
@@ -109,6 +109,7 @@ public class SottomissioneHandler {
                     throw new RuntimeException(e);
                 }
                 // assegnazione del file alla sottomissione e salvataggio
+
                 sottomissione.setFile(fileSottomissione.getPath());
                 sottomissioneRep.save(sottomissione);
             }

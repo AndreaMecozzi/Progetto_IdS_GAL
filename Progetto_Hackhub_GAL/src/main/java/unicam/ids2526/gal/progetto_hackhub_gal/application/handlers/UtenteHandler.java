@@ -9,16 +9,16 @@ import java.util.Optional;
 @Service
 public class UtenteHandler {
 
-    private final UtenteRepository utenteRepository;
+    private final UtenteRepository utenteRep;
     private final JwtUtil jwtUtil;
 
-    public UtenteHandler(UtenteRepository utenteRepository, JwtUtil jwtUtil) {
-        this.utenteRepository = utenteRepository;
+    public UtenteHandler(UtenteRepository utenteRep, JwtUtil jwtUtil) {
+        this.utenteRep = utenteRep;
         this.jwtUtil = jwtUtil;
     }
 
     public Optional<String> login(String username, String password) {
-        Optional<Utente> utenteOpt = utenteRepository.findByUsername(username);
+        Optional<Utente> utenteOpt = utenteRep.findByUsername(username);
 
         if (utenteOpt.isPresent()) {
             Utente utente = utenteOpt.get();

@@ -103,6 +103,10 @@ public class HackathonHandler {
         Team team=teamRep.findByUtenti_Username(username).orElseThrow(
                 ()->new Exception("Bisogna avere un team per iscriversi"));
 
+        if(team.getHackathon()!=null){
+            throw new Exception("Il team è già iscritto ad un hackathon");
+        }
+
         Hackathon hackathon=hackathonRep.findByNome(nomeHackathon).orElseThrow(
                 ()->new Exception("Hackathon non esistente"));
 
