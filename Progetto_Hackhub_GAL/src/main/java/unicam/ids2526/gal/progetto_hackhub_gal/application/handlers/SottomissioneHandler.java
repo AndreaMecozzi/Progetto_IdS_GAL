@@ -82,39 +82,42 @@ public class SottomissioneHandler {
         }
 
         // verifica sullo stato dell'Hackathon e sul formato del file che si vuole aggiungere
-        try{
-            if(h.getStato().equals("IN_CORSO")){
-                if(file==null||file.isEmpty()){
-                    System.out.println(file);
-                    throw new Exception("Errore: File non valido");
-                }
-                if(!file.getOriginalFilename().endsWith(".zip")){
-                    throw new Exception("Errore: Formato del file non valido");
-                }
-                // creato il file specificando il percorso e il nome
-                File fileSottomissione= new File("src/main/resources/static/sottomissioni/"+file.getOriginalFilename());
 
-                if (!fileSottomissione.getParentFile().exists()) {
-                    fileSottomissione.getParentFile().mkdirs();
-                }
-
-                try{
-                    fileSottomissione.createNewFile();
-                    FileOutputStream fileStream = new FileOutputStream(fileSottomissione);
-                    fileStream.write(file.getBytes());
-                    fileStream.close();
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
-                } catch (IOException e){
-                    throw new RuntimeException(e);
-                }
-                // assegnazione del file alla sottomissione e salvataggio
-
-                sottomissione.setFile(fileSottomissione.getPath());
-                sottomissioneRep.save(sottomissione);
+        if(h.getStato().equals("IN_CORSO")){
+            if(file==null||file.isEmpty()){
+                System.out.println(file);
+                throw new Exception("Errore: File non valido");
             }
-        }catch(Exception e){
-            throw new Exception("Errore: impossibile aggiornare la sottomissione");
+            if(!file.getOriginalFilename().endsWith(".zip")){
+                throw new Exception("Errore: Formato del file non valido");
+            }
+            // creato il file specificando il percorso e il nome
+            File fileSottomissione= new File("src/main/resources/static/sottomissioni/"+file.getOriginalFilename());
+
+            if (!fileSottomissione.getParentFile().exists()) {
+                fileSottomissione.getParentFile().mkdirs();
+            }
+
+            try{
+                fileSottomissione.createNewFile();
+                FileOutputStream fileStream = new FileOutputStream(fileSottomissione);
+                fileStream.write(file.getBytes());
+                fileStream.close();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e){
+                throw new RuntimeException(e);
+            }
+
+            // assegnazione del file alla sottomissione e salvataggio
+            sottomissione.setFile(fileSottomissione.getPath());
+            sottomissioneRep.save(sottomissione);
+        }else{
+            switch(h.getStato()){
+                case "IN_ISCRIZIONE"->throw new Exception("Errore: L'hackathon non è ancora iniziato");
+                case "IN_VALUTAZIONE"->throw new Exception("Errore: La sottomissione è in valutazione");
+                case "CONCLUSO"->throw new Exception("Errore: L'hackathon è concluso");
+            }
         }
     }
 
