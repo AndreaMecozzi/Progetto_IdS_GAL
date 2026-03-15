@@ -33,7 +33,7 @@ public class InvitoController {
     }
 
     @PreAuthorize("hasAuthority('UTENTE')")
-    @GetMapping("/visualizzaInviti")
+    @GetMapping("/visualizza")
     public ResponseEntity<Object> visualizzaInviti(Authentication autentication){
         String username = autentication.getName();
         try {

@@ -47,12 +47,21 @@ public class SottomissioneHandler {
             throw new RuntimeException("Hackathon non trovato per questo team");
         }
 
-        // Creazione dell'entità sottomissione legata al team trovato
-        Sottomissione sottomissione = new Sottomissione(t);
-        // Aggiunge la sottomissione al team
-        t.setSottomissione(sottomissione);
-        sottomissioneRep.save(sottomissione);
-        teamRep.save(t);
+        if(h.getStato().equals("IN_CORSO")){
+            // Creazione dell'entità sottomissione legata al team trovato
+            Sottomissione sottomissione = new Sottomissione(t);
+            // Aggiunge la sottomissione al team
+            t.setSottomissione(sottomissione);
+            sottomissioneRep.save(sottomissione);
+            teamRep.save(t);
+        }else{
+            switch(h.getStato()){
+                case "IN_ISCRIZIONE"->throw new Exception("Errore: L'hackathon non è ancora iniziato");
+                case "IN_VALUTAZIONE"->throw new Exception("Errore: La sottomissione è in valutazione");
+                case "CONCLUSO"->throw new Exception("Errore: L'hackathon è concluso");
+            }
+        }
+
     }
 
     /**

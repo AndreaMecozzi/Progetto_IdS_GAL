@@ -18,7 +18,7 @@ public class TeamController {
     }
 
     @PreAuthorize("hasAuthority('UTENTE')")
-    @PostMapping("/creaTeam")
+    @PostMapping("/crea")
     public ResponseEntity<Object> creaTeam(Authentication authentication, @RequestBody String nomeTeam) {
         String username= authentication.getName();
         try{
@@ -30,7 +30,7 @@ public class TeamController {
     }
 
     @PreAuthorize("hasAuthority('UTENTE')")
-    @GetMapping("/visualizzaInfoTeam")
+    @GetMapping("/visualizzaInfo")
     public ResponseEntity<Object> visualizzaInfoTeam(Authentication authentication) {
         try{
             //estraggo dal JWT l'username

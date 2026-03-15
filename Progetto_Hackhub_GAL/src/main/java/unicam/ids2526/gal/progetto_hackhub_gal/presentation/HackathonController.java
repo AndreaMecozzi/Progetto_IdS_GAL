@@ -22,7 +22,7 @@ public class HackathonController {
     }
 
     @PreAuthorize("hasAuthority('ORGANIZZATORE')")
-    @PostMapping(value = "/creaHackathon",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/crea",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> creaHackathon(Authentication authentication,
                                                 @ModelAttribute CreaHackathonDTO creaDTO){
         String nomeHackhathon = creaDTO.getNomeHackathon();

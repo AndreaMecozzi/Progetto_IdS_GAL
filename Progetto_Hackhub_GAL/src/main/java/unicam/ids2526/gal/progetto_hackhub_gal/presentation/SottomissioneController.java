@@ -21,12 +21,12 @@ public class SottomissioneController {
     }
 
     @PreAuthorize("hasAuthority('UTENTE')")
-    @PostMapping("/creaSottomisione")
+    @PostMapping("/crea")
     public ResponseEntity<Object> creaSottomissione(Authentication authentication){
         String username = authentication.getName();
         try{
             sottomissioneHandler.creaSottomissione(username);
-            return new ResponseEntity<Object>("Sottomissione creata", HttpStatus.CREATED);
+            return new ResponseEntity<Object>("Sottomissione creata", HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
