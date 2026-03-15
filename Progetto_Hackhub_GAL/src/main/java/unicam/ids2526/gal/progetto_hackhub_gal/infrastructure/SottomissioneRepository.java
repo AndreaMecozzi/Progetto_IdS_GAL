@@ -13,7 +13,7 @@ public interface SottomissioneRepository extends JpaRepository<Sottomissione, Lo
      * Query corrispondente: SELECT * FROM sottomissione WHERE team_id = ?
      * Utilizzato nell'aggiornamento per trovare la sottomissione esistente di un team.
      */
-    Optional<Sottomissione> findByTeamNome(String nometeam);
+    Optional<Sottomissione> findByTeamNome(String nomeTeam);
 
     Optional<Sottomissione> findByTeam_TeamId(Long teamId);
 

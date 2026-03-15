@@ -128,6 +128,7 @@ public class Hackathon {
     public void setMentore(List<Utente> mentore) {
         this.mentore = mentore;
     }
+    public void addMentore(Utente mentore) { this.mentore.add(mentore);}
 
     public Utente getGiudice() {
         return giudice;

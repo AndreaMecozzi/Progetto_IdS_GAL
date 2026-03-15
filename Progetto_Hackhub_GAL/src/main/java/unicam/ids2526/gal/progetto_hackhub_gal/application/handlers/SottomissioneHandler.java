@@ -81,9 +81,6 @@ public class SottomissioneHandler {
         Sottomissione sottomissione = sottomissioneRep.findByTeamNome(t.getNome()).orElseThrow(
                 () -> new Exception("Errore: Nessuna sottomissione trovata per questo team"));
 
-        // ricava l'id del team
-        Long teamId = sottomissione.getTeam().getTeamId();
-
         // ricava l'hackathon a cui il team partecipa
         Hackathon h = t.getHackathon();
         if (h == null) {
