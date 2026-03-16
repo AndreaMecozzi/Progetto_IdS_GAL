@@ -53,4 +53,48 @@ public class HackathonController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/visualizzaRegolamento")
+    public ResponseEntity<Object> visualizzaRegolamento(@RequestBody String nomeHackathon){
+        try{
+            return new ResponseEntity<>(hackathonHandler.visualizzaRegolamento(nomeHackathon),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    @GetMapping("/elenco")
+    public ResponseEntity<Object> elencoHackathon(){
+        try{
+            return new ResponseEntity<>(hackathonHandler.elencoHackathon(),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('UTENTE')")
+    @PostMapping("/rimuovi")
+    public ResponseEntity<Object> rimuoviHackathon(Authentication authentication,@RequestBody String nomeHackathon){
+        String username=authentication.getName();
+        try{
+            hackathonHandler.rimuoviHackathon(username, nomeHackathon);
+            return new ResponseEntity<>("Hackathon rimosso con successo",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('UTENTE')")
+    @PostMapping("/aggiornaRegolamento")
+    public ResponseEntity<Object> aggiornaRegolamento(Authentication authentication,@RequestParam  String nomeHackathon,@RequestParam MultipartFile file ){
+        String username=authentication.getName();
+        try{
+            hackathonHandler.aggiornaRegolamento(username, nomeHackathon, file);
+            return new ResponseEntity<>("regolamento aggiornato con successo",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

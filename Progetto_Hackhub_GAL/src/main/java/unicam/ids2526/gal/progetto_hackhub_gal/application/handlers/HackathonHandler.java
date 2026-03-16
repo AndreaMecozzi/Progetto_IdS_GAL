@@ -124,4 +124,92 @@ public class HackathonHandler {
         team.setHackathon(hackathon);
         teamRep.save(team);
     }
+
+    public String visualizzaRegolamento(String nomeHackathon) throws Exception{
+        // recupero l'Hackathon dal nome
+        Hackathon h = hackathonRep.findByNome(nomeHackathon).orElseThrow(
+                ()->new Exception("Hackathon non esistente"));
+
+        // recupero e restituisco il regolamento dell'Hackathon
+        return h.getRegolamento();
+    }
+
+    public List<Hackathon> elencoHackathon() throws Exception{
+        List<Hackathon> listaHackathon = hackathonRep.findAll();
+
+        // controllo se la lista è vuota
+        if (listaHackathon.isEmpty()) {
+            throw new Exception("Non ci sono Hackathon");
+        }
+
+        // restituisco gli hackathon Trovati;
+        return listaHackathon;
+    }
+
+    public void rimuoviHackathon(String username, String nomeHackathon) throws Exception{
+        // recupero l'hackathon dal nome
+        Hackathon hackathon= hackathonRep.findByNome(nomeHackathon).orElseThrow(
+                ()->new Exception("Hackathon non esistente"));
+
+        // controllo che l'hackathon sia ancora in fase "IN_ISCRIZIONE"
+        if(!hackathon.getStato().equals("IN_ISCRIZIONE")){
+            throw new Exception("impossibile rimuovere l'hackathon");
+        }
+
+        // controllo se l'organizzatore è quello dell'hackathon richiesto
+        Utente organizzatore = hackathon.getOrganizzatore();
+        String usernameOrganizzatore = organizzatore.getUsername();
+
+        if(username.equals(usernameOrganizzatore)){
+            throw new Exception("impossibile rimuovere l'hackathon: non sei l'organizzatore");
+        }
+
+        //rimozione dell'hackathon
+        hackathonRep.deleteByNome(nomeHackathon);
+    }
+
+
+    public void aggiornaRegolamento(String username, String nomeHackathon, MultipartFile regolamento) throws Exception{
+        // recupero l'hackathon dal nome
+        Hackathon hackathon= hackathonRep.findByNome(nomeHackathon).orElseThrow(
+                ()->new Exception("Hackathon non esistente"));
+
+        // controllo che l'hackathon sia ancora in fase "IN_ISCRIZIONE"
+        if(!hackathon.getStato().equals("IN_ISCRIZIONE")){
+            throw new Exception("impossibile aggiornare il regolamento");
+        }
+
+        //controlli sul file del nuovo regolamento
+        if(regolamento==null||regolamento.isEmpty()){
+            System.out.println(regolamento);
+            throw new Exception("Errore: File non valido");
+        }
+
+        if((!regolamento.getOriginalFilename().endsWith(".pdf")) && (!regolamento.getOriginalFilename().endsWith(".txt"))){
+            throw new Exception("Errore: Formato del file non valido");
+        }
+
+
+        // creato il file specificando il percorso e il nome
+        File fileRegolamento= new File("src/main/resources/static/regolamenti/"+regolamento.getOriginalFilename());
+
+        if (!fileRegolamento.getParentFile().exists()) {
+            fileRegolamento.getParentFile().mkdirs();
+        }
+
+        try{
+            fileRegolamento.createNewFile();
+            FileOutputStream fileStream = new FileOutputStream(fileRegolamento);
+            fileStream.write(regolamento.getBytes());
+            fileStream.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+
+        // assegnazione del nuovo regolamento e salvataggio
+        hackathon.setRegolamento(fileRegolamento.getPath());
+        hackathonRep.save(hackathon);
+    }
 }

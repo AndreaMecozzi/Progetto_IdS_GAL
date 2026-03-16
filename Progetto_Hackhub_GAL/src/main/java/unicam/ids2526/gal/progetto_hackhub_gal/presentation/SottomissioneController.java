@@ -46,9 +46,6 @@ public class SottomissioneController {
     }
 
 
-
-
-
     @PreAuthorize("hasAuthority('UTENTE')")
     @GetMapping("/visualizza")
     public ResponseEntity<Object> visualizzaSottomissione(Authentication authentication) {
