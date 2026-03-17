@@ -97,4 +97,16 @@ public class HackathonController {
         }
     }
 
+    @PreAuthorize("hasAuthority('UTENTE')")
+    @PostMapping("/disiscrivi")
+    public ResponseEntity<Object> disiscriviTeam(Authentication authentication){
+        String username=authentication.getName();
+        try{
+            hackathonHandler.disiscriviTeam(username);
+            return new ResponseEntity<>("team disiscritto dall'hackathon",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

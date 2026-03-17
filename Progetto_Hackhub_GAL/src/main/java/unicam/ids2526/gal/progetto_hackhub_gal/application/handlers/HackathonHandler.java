@@ -212,4 +212,34 @@ public class HackathonHandler {
         hackathon.setRegolamento(fileRegolamento.getPath());
         hackathonRep.save(hackathon);
     }
+
+    public void disiscriviTeam(String username) throws Exception {
+        // recupero del team del richiedente
+        Team t = teamRep.findByUtenti_Username(username).orElseThrow(
+                ()->new Exception("Errore: Devi far parte di un team"));
+
+        // recupero dell'hackathon a cui il team è iscritto
+        Hackathon h = t.getHackathon();
+
+        if (h == null){
+            throw new Exception("Errore: Devi essere iscritto ad un hackathon");
+        }
+
+        // controllo sullo stato dell'hackathon
+        String stato = h.getStato();
+        if(stato.equals("IN_VALUTAZIONE") || stato.equals("CONCLUSO")){
+            throw new Exception("Errore: Impossibile disiscriversi dall'hackathon");
+        }
+
+        // rimozione del team dalla lista dei team partecipanti all'hackathon
+        h.removeTeam(t);
+
+        // campo Hackathon resettato a null nella classe team
+        t.setHackathon(null);
+
+        //salvataggio
+        hackathonRep.save(h);
+        teamRep.save(t);
+
+    }
 }

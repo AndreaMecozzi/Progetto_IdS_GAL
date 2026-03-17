@@ -50,7 +50,7 @@ public class Hackathon {
     @JoinColumn(name="giudice_id", nullable = false)
     private Utente giudice;
 
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL)
     private List<Team> teamPartecipanti;
 
     // Costruttore di default richiesto da JPA
@@ -145,5 +145,12 @@ public class Hackathon {
     }
     public void addTeam(Team team) {
         this.teamPartecipanti.add(team);
+    }
+
+    public void removeTeam(Team team) {
+        if (team != null) {
+            this.teamPartecipanti.remove(team);
+            team.setHackathon(null);
+        }
     }
 }
