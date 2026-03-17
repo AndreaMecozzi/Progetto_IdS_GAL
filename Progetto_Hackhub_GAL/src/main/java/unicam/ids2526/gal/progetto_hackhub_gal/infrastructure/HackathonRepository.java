@@ -12,4 +12,5 @@ public interface HackathonRepository extends JpaRepository<Hackathon, Long> {
     Optional<Hackathon> findByNome(String nomeHackhathon);
     List<Hackathon> findAll();
     void deleteByNome(String nome);
+    List<Hackathon> findAllByStatoNot(String stato);
 }

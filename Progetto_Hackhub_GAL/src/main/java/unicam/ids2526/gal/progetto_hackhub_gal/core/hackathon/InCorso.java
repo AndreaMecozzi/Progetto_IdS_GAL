@@ -12,7 +12,7 @@ public class InCorso implements StatoHackathon {
 
     @Override
     public void cambiaStato(){
-        if(LocalDateTime.now().isAfter(LocalDateTime.now().plusDays(30))){
+        if(LocalDateTime.now().isAfter(hackathon.getDataInizioStato().plusDays(30))){
             StatoHackathon inCorso=new InCorso();
             hackathon.setStato(inCorso);
             hackathon.setDataInizioStato(LocalDateTime.now());

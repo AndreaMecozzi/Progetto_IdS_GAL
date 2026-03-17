@@ -11,7 +11,7 @@ public class InValutazione implements StatoHackathon{
     private Hackathon hackathon;
     @Override
     public void cambiaStato(){
-        if(LocalDateTime.now().isAfter(LocalDateTime.now().plusDays(14))){
+        if(LocalDateTime.now().isAfter(hackathon.getDataInizioStato().plusDays(14))){
             StatoHackathon inCorso=new InCorso();
             hackathon.setStato(inCorso);
             hackathon.setDataInizioStato(LocalDateTime.now());
