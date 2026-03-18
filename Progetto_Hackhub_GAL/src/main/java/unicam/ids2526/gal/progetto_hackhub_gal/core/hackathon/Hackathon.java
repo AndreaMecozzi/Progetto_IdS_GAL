@@ -88,7 +88,7 @@ public class Hackathon {
     public String getStato() {
         return stato.getNomeStato();
     }
-    public void cambiaStato() {this.stato.cambiaStato();}
+    public void cambiaStato() {this.stato.cambiaStato(this);}
     public void setStato(StatoHackathon stato) { this.stato=stato;}
 
     public LocalDateTime getDataInizioStato() {

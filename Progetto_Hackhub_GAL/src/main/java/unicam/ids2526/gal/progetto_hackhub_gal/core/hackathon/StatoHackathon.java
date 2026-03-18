@@ -10,7 +10,7 @@ public interface StatoHackathon {
     /**
      * Cambia lo stato dell'hackathon se il periodo è terminato
      */
-    public void cambiaStato();
+    public void cambiaStato(Hackathon h);
 
     /**
      * Serve a salvare lo stato all'interno del Database nella tabella

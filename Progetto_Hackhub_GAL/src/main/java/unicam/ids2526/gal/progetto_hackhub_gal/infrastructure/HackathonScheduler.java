@@ -11,20 +11,22 @@ import java.util.List;
 @Component
 public class HackathonScheduler {
 
-    @Autowired
     private HackathonRepository hackathonRep;
 
-    @Scheduled(cron = "0 0 * * * *")
-    @Transactional
-    public void controllaScadenze() throws Exception {
-        List<Hackathon> attivi = hackathonRep.findAllByStatoNot("CONCLUSO");
-        if(attivi.isEmpty()){
-            throw new Exception("Errore: non ci sono hackathon");
-        }
+    public HackathonScheduler(HackathonRepository hackathonRep) {
+        this.hackathonRep = hackathonRep;
+    }
 
-        for (Hackathon h : attivi) {
-            h.cambiaStato();
-            hackathonRep.save(h);
+    /// @Scheduled(cron = "0 0 * * * *") --> Scatta ad ogni ora, commentato per testare ogni minuto
+    @Scheduled(cron = "0 * * * * *")
+    @Transactional
+    public void controllaScadenze(){
+        List<Hackathon> attivi = hackathonRep.findAllByStatoNot("CONCLUSO");
+        if(!attivi.isEmpty()){
+            for (Hackathon h : attivi) {
+                h.cambiaStato();
+                hackathonRep.save(h);
+            }
         }
     }
 }

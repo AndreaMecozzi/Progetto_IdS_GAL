@@ -8,12 +8,17 @@ import java.time.LocalDateTime;
  */
 public class InValutazione implements StatoHackathon{
 
-    private Hackathon hackathon;
     @Override
-    public void cambiaStato(){
-        if(LocalDateTime.now().isAfter(hackathon.getDataInizioStato().plusDays(14))){
-            StatoHackathon inCorso=new InCorso();
-            hackathon.setStato(inCorso);
+    public void cambiaStato(Hackathon hackathon){
+        /// Durata effettiva 14 giorni, ma commentato per testare
+        /**if(LocalDateTime.now().isAfter(hackathon.getDataInizioStato().plusDays(14))){
+            StatoHackathon concluso=new Concluso();
+            hackathon.setStato(concluso);
+            hackathon.setDataInizioStato(LocalDateTime.now());
+        }*/
+        if(LocalDateTime.now().isAfter(hackathon.getDataInizioStato().plusMinutes(1))){
+            StatoHackathon concluso=new Concluso();
+            hackathon.setStato(concluso);
             hackathon.setDataInizioStato(LocalDateTime.now());
         }
     }

@@ -6,10 +6,8 @@ package unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon;
  */
 public class Concluso implements StatoHackathon{
 
-    private Hackathon hackathon;
-
     @Override
-    public void cambiaStato(){
+    public void cambiaStato(Hackathon hackathon){
         /// Un hackathon concluso non cambia stato
     }
 

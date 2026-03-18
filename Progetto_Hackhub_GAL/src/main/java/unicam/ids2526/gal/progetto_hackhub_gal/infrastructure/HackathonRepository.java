@@ -1,6 +1,8 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.infrastructure;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 
@@ -12,5 +14,7 @@ public interface HackathonRepository extends JpaRepository<Hackathon, Long> {
     Optional<Hackathon> findByNome(String nomeHackhathon);
     List<Hackathon> findAll();
     void deleteByNome(String nome);
-    List<Hackathon> findAllByStatoNot(String stato);
+
+    @Query(value = "SELECT * FROM hackathon WHERE stato <> :stato", nativeQuery = true)
+    List<Hackathon> findAllByStatoNot(@Param("stato") String stato);
 }
