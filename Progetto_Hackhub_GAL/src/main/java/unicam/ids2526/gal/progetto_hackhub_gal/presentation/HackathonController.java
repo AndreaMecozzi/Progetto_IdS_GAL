@@ -1,5 +1,7 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.presentation;
 
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.dto.CreaHackathonDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.HackathonHandler;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 
 @RestController
@@ -57,7 +61,18 @@ public class HackathonController {
     @GetMapping("/visualizzaRegolamento")
     public ResponseEntity<Object> visualizzaRegolamento(@RequestBody String nomeHackathon){
         try{
-            return new ResponseEntity<>(hackathonHandler.visualizzaRegolamento(nomeHackathon),HttpStatus.OK);
+            File regolamento=hackathonHandler.visualizzaRegolamento(nomeHackathon);
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(regolamento));
+
+            HttpHeaders header = new HttpHeaders();
+            header.add("Content-Disposition", String.format("attachment; fileName=\"%s\"",
+                    regolamento.getName()));
+
+            ResponseEntity<Object> response = ResponseEntity.ok().headers(header)
+                    .contentLength(regolamento.length())
+                    .contentType(MediaType.parseMediaType("application/txt")).body(resource);
+            return response;
+            //return new ResponseEntity<>(hackathonHandler.visualizzaRegolamento(nomeHackathon),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -73,7 +88,7 @@ public class HackathonController {
         }
     }
 
-    @PreAuthorize("hasAuthority('UTENTE')")
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
     @PostMapping("/rimuovi")
     public ResponseEntity<Object> rimuoviHackathon(Authentication authentication,@RequestBody String nomeHackathon){
         String username=authentication.getName();
@@ -85,9 +100,11 @@ public class HackathonController {
         }
     }
 
-    @PreAuthorize("hasAuthority('UTENTE')")
-    @PostMapping("/aggiornaRegolamento")
-    public ResponseEntity<Object> aggiornaRegolamento(Authentication authentication,@RequestParam  String nomeHackathon,@RequestParam MultipartFile file ){
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
+    @PostMapping(value = "/aggiornaRegolamento", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Object> aggiornaRegolamento(Authentication authentication,
+                                                      @RequestParam  String nomeHackathon,
+                                                      @RequestParam MultipartFile file){
         String username=authentication.getName();
         try{
             hackathonHandler.aggiornaRegolamento(username, nomeHackathon, file);
@@ -103,7 +120,7 @@ public class HackathonController {
         String username=authentication.getName();
         try{
             hackathonHandler.disiscriviTeam(username);
-            return new ResponseEntity<>("team disiscritto dall'hackathon",HttpStatus.OK);
+            return new ResponseEntity<>("Team disiscritto dall'hackathon",HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

@@ -35,7 +35,8 @@ public class SottomissioneController {
 
     @PreAuthorize("hasAuthority('UTENTE')")
     @PostMapping(value = "/aggiorna", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Object> aggiornaSottomissione(Authentication authentication, @RequestParam MultipartFile file) {
+    public ResponseEntity<Object> aggiornaSottomissione(Authentication authentication,
+                                                        @RequestParam MultipartFile file) {
         String username = authentication.getName();
         try {
             sottomissioneHandler.aggiornaSottomissione(username, file);

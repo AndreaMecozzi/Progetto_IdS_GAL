@@ -146,11 +146,9 @@ public class Hackathon {
     public void addTeam(Team team) {
         this.teamPartecipanti.add(team);
     }
-
     public void removeTeam(Team team) {
         if (team != null) {
             this.teamPartecipanti.remove(team);
-            team.setHackathon(null);
         }
     }
 }

@@ -125,13 +125,13 @@ public class HackathonHandler {
         teamRep.save(team);
     }
 
-    public String visualizzaRegolamento(String nomeHackathon) throws Exception{
+    public File visualizzaRegolamento(String nomeHackathon) throws Exception{
         // recupero l'Hackathon dal nome
         Hackathon h = hackathonRep.findByNome(nomeHackathon).orElseThrow(
                 ()->new Exception("Hackathon non esistente"));
 
-        // recupero e restituisco il regolamento dell'Hackathon
-        return h.getRegolamento();
+        File regolamento=new File(h.getRegolamento());
+        return regolamento;
     }
 
     public List<Hackathon> elencoHackathon() throws Exception{
@@ -162,6 +162,13 @@ public class HackathonHandler {
 
         if(username.equals(usernameOrganizzatore)){
             throw new Exception("impossibile rimuovere l'hackathon: non sei l'organizzatore");
+        }
+
+        //disiscrivo i team dall'hackathon
+        List<Team> teams=hackathon.getTeamPartecipanti();
+        for(Team team:teams){
+            team.setHackathon(null);
+            teamRep.save(team);
         }
 
         //rimozione dell'hackathon
