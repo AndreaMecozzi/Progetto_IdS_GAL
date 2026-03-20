@@ -16,7 +16,7 @@ public class InCorso implements StatoHackathon {
             hackathon.setStato(inValutazione);
             hackathon.setDataInizioStato(LocalDateTime.now());
         }*/
-        if(LocalDateTime.now().isAfter(hackathon.getDataInizioStato().plusMinutes(1))){
+        if(LocalDateTime.now().isAfter(hackathon.getDataInizioStato().plusMinutes(2))){
             StatoHackathon inValutazione=new InValutazione();
             hackathon.setStato(inValutazione);
             hackathon.setDataInizioStato(LocalDateTime.now());

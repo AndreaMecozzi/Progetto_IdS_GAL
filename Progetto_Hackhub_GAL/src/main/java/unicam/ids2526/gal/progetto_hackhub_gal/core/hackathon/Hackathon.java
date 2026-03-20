@@ -50,7 +50,7 @@ public class Hackathon {
     @JoinColumn(name="giudice_id", nullable = false)
     private Utente giudice;
 
-    @OneToMany(mappedBy = "hackathon", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "hackathon", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Team> teamPartecipanti;
 
     // Costruttore di default richiesto da JPA

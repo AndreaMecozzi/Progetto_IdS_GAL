@@ -4,25 +4,37 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Sottomissione;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Valutazione;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
-import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.HackathonRepository;
-import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.SottomissioneRepository;
-import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
+import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SottomissioneHandler {
 
     private final SottomissioneRepository sottomissioneRep;
     private final TeamRepository teamRep;
+    private final HackathonRepository hackathonRep;
+    private final UtenteRepository utenteRep;
+    private final ValutazioneRepository valutazioneRep;
 
-    public SottomissioneHandler(SottomissioneRepository sottomissioneRep, TeamRepository teamRep,HackathonRepository hackathonRep) {
+    public SottomissioneHandler(SottomissioneRepository sottomissioneRep,
+                                TeamRepository teamRep,
+                                HackathonRepository hackathonRep,
+                                UtenteRepository utenteRep,
+                                ValutazioneRepository valutazioneRep) {
         this.sottomissioneRep = sottomissioneRep;
         this.teamRep = teamRep;
+        this.hackathonRep = hackathonRep;
+        this.utenteRep = utenteRep;
+        this.valutazioneRep=valutazioneRep;
     }
 
     /**
@@ -142,6 +154,60 @@ public class SottomissioneHandler {
 
         return sottomissioneRep.findByTeam_TeamId(teamId).orElseThrow(
                 () -> new Exception("Errore: la sottomissione non esiste"));
+    }
+
+    public List<Sottomissione> visualizzaSottomissioni(String username,
+                                                       String nomeHackathon) throws Exception {
+        Hackathon hackathon=hackathonRep.findByNome(nomeHackathon).orElseThrow(
+                ()->new Exception("Errore: Hackathon non esistente"));
+
+        List<Team> teams=hackathon.getTeamPartecipanti();
+        List<Sottomissione> sottomissioni=new ArrayList<Sottomissione>();
+        for(Team team:teams){
+            sottomissioni.add(team.getSottomissione());
+        }
+
+        return sottomissioni;
+    }
+
+    public void valutaSottomissione(String username,
+                                    String nomeTeam,
+                                    int voto,
+                                    String descrizione) throws Exception {
+
+        if(voto<0||voto>10){
+            throw new Exception("Errore: Voto non valido");
+        }
+
+        if(descrizione.isEmpty()){
+            throw new Exception("Errore: Descrizione non valida");
+        }
+
+        Team team=teamRep.findByNome(nomeTeam).orElseThrow(
+                ()->new Exception("Errore: Team non esistente"));
+        Hackathon hackathon=team.getHackathon();
+        if(hackathon==null){
+            throw new Exception("Errore: Il team non è iscritto a nessun hackathon");
+        }
+
+        if(!username.equals(hackathon.getGiudice().getUsername())){
+            throw new Exception("Errore: Non sei nominato per l'hackathon " +
+                    "a cui partecipa il team specificato");
+        }
+
+        if(hackathon.getStato().equals("IN_VALUTAZIONE")){
+            Sottomissione sottomissione=team.getSottomissione();
+            if(sottomissione==null){
+                throw new Exception("Errore: Il team non ha creato una sottomissione");
+            }
+            Valutazione valutazione=new Valutazione(voto, descrizione);
+            valutazioneRep.save(valutazione);
+            sottomissione.setValutazione(valutazione);
+            sottomissioneRep.save(sottomissione);
+        }else{
+            throw new Exception("Errore: L'Hackathon non è in valutazione");
+        }
+
     }
 }
 

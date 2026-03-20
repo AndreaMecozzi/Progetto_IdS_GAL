@@ -48,14 +48,41 @@ public class SottomissioneController {
 
 
     @PreAuthorize("hasAuthority('UTENTE')")
-    @GetMapping("/visualizza")
+    @GetMapping("/utente/visualizza")
     public ResponseEntity<Object> visualizzaSottomissione(Authentication authentication) {
         String username= authentication.getName();
         try {
             return new ResponseEntity<>(sottomissioneHandler.visualizzaSottomissione(username), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
+    @PreAuthorize("hasAuthority('GIUDICE')")
+    @GetMapping("/giudice/visualizza")
+    public ResponseEntity<Object> visualizzaSottomissioni(Authentication authentication,
+                                                          @RequestBody String nomeHackathon) {
+        String username= authentication.getName();
+        try{
+            return new ResponseEntity<>(sottomissioneHandler.visualizzaSottomissioni(username,
+                    nomeHackathon),HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('GIUDICE')")
+    @PostMapping("/valuta")
+    public ResponseEntity<Object> valutaSottomissione(Authentication authentication,
+                                                      @RequestParam String nomeTeam,
+                                                      @RequestParam int voto,
+                                                      @RequestParam String descrizione) {
+        String username= authentication.getName();
+        try{
+            sottomissioneHandler.valutaSottomissione(username, nomeTeam, voto, descrizione);
+            return new ResponseEntity<>("Sottomissione valutata con successo",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

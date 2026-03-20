@@ -17,8 +17,8 @@ public class HackathonScheduler {
         this.hackathonRep = hackathonRep;
     }
 
-    @Scheduled(cron = "0 0 * * * *") //--> Scatta ad ogni ora
-    /// @Scheduled(cron = "0 * * * * *") //--> Scatta ogni minuto, per il testing
+    /// @Scheduled(cron = "0 0 * * * *") //--> Scatta ad ogni ora
+    @Scheduled(cron = "0 * * * * *") //--> Scatta ogni minuto, per il testing
     @Transactional
     public void controllaScadenze(){
         List<Hackathon> attivi = hackathonRep.findAllByStatoNot("CONCLUSO");

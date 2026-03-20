@@ -16,7 +16,7 @@ public class InValutazione implements StatoHackathon{
             hackathon.setStato(concluso);
             hackathon.setDataInizioStato(LocalDateTime.now());
         }*/
-        if(LocalDateTime.now().isAfter(hackathon.getDataInizioStato().plusMinutes(1))){
+        if(LocalDateTime.now().isAfter(hackathon.getDataInizioStato().plusMinutes(60))){
             StatoHackathon concluso=new Concluso();
             hackathon.setStato(concluso);
             hackathon.setDataInizioStato(LocalDateTime.now());

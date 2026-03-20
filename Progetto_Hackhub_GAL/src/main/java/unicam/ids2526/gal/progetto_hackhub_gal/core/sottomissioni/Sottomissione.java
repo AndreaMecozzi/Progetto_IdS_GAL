@@ -1,9 +1,8 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
-
-import java.io.File;
 
 @Entity
 public class Sottomissione {
@@ -20,10 +19,14 @@ public class Sottomissione {
     //@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file", referencedColumnName = "id")
     private String file;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
+    @ManyToOne
+    @JoinColumn(name = "valutazione_id")
+    private Valutazione valutazione;
+
 
     // Costruttori
     public Sottomissione(){}
@@ -32,6 +35,7 @@ public class Sottomissione {
         this.nome= "Sottomissione di " + team.getNome();
         this.team= team;
         this.file=null;
+        this.valutazione =null;
     }
 
     // Getter & Setter
@@ -53,5 +57,13 @@ public class Sottomissione {
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    public Valutazione getValutazione() {
+        return valutazione;
+    }
+
+    public void setValutazione(Valutazione voto) {
+        this.valutazione = voto;
     }
 }

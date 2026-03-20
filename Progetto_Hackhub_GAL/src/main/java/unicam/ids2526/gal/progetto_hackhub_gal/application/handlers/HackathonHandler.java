@@ -1,6 +1,7 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.InIscrizione;
@@ -146,22 +147,20 @@ public class HackathonHandler {
         return listaHackathon;
     }
 
+    @Transactional
     public void rimuoviHackathon(String username, String nomeHackathon) throws Exception{
         // recupero l'hackathon dal nome
         Hackathon hackathon= hackathonRep.findByNome(nomeHackathon).orElseThrow(
-                ()->new Exception("Hackathon non esistente"));
+                ()->new Exception("Errore: Hackathon non esistente"));
+
+        // recupero l'organizzatore
+        if(!username.equals(hackathon.getOrganizzatore().getUsername())){
+            throw new Exception("Errore: L'hackathon specificato non è organizzato da te");
+        }
 
         // controllo che l'hackathon sia ancora in fase "IN_ISCRIZIONE"
         if(!hackathon.getStato().equals("IN_ISCRIZIONE")){
-            throw new Exception("impossibile rimuovere l'hackathon");
-        }
-
-        // controllo se l'organizzatore è quello dell'hackathon richiesto
-        Utente organizzatore = hackathon.getOrganizzatore();
-        String usernameOrganizzatore = organizzatore.getUsername();
-
-        if(username.equals(usernameOrganizzatore)){
-            throw new Exception("impossibile rimuovere l'hackathon: non sei l'organizzatore");
+            throw new Exception("Errore: L'hackathon è cominciato e non è possibile cancellarlo");
         }
 
         //disiscrivo i team dall'hackathon
@@ -179,11 +178,16 @@ public class HackathonHandler {
     public void aggiornaRegolamento(String username, String nomeHackathon, MultipartFile regolamento) throws Exception{
         // recupero l'hackathon dal nome
         Hackathon hackathon= hackathonRep.findByNome(nomeHackathon).orElseThrow(
-                ()->new Exception("Hackathon non esistente"));
+                ()->new Exception("Errore: Hackathon non esistente"));
+
+        // recupero l'organizzatore
+        if(!username.equals(hackathon.getOrganizzatore().getUsername())){
+            throw new Exception("Errore: L'hackathon specificato non è organizzato da te");
+        }
 
         // controllo che l'hackathon sia ancora in fase "IN_ISCRIZIONE"
         if(!hackathon.getStato().equals("IN_ISCRIZIONE")){
-            throw new Exception("impossibile aggiornare il regolamento");
+            throw new Exception("Errore: Impossibile aggiornare il regolamento");
         }
 
         //controlli sul file del nuovo regolamento

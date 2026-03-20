@@ -104,7 +104,7 @@ public class HackathonController {
     @PostMapping(value = "/aggiornaRegolamento", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Object> aggiornaRegolamento(Authentication authentication,
                                                       @RequestParam  String nomeHackathon,
-                                                      @RequestParam MultipartFile file){
+                                                      @RequestBody MultipartFile file){
         String username=authentication.getName();
         try{
             hackathonHandler.aggiornaRegolamento(username, nomeHackathon, file);
