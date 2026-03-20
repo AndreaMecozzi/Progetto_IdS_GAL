@@ -1,6 +1,7 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 
 import org.springframework.stereotype.Service;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
@@ -51,5 +52,33 @@ public class TeamHandler {
 
         return team;
 
+    }
+
+
+    /**
+     * Modifica le informazioni del Team
+     *
+     * @param username l'username dell'utente che vuole modificare le info del proprio team
+     * @param nuovoNome il nuovo nome che si vuole dare al team
+     * @return void
+     * @throws Exception se il team non esiste, l'utente non è membro di un team, o i parametri non sono validi
+     */
+
+    public void modificaTeam(String username, String nuovoNome) throws Exception{
+        Team mioTeam= teamRep.findByUtenti_Username(username).
+                orElseThrow(()->new Exception("Errore: Non appartieni a nessun team"));
+
+        Team team = teamRep.findByUtenti_Username(username)
+                .orElseThrow(()->new Exception("Errore: Esiste già un team con questo nome"));
+
+        Hackathon hackathon = mioTeam.getHackathon();
+        if(hackathon != null){
+            if(!hackathon.getStato().equals("IN_ISCRIZIONE")){
+                throw new Exception("Errore: impossibile modificare il team");
+            }
+        }
+
+        mioTeam.setNome(nuovoNome);
+        teamRep.save(mioTeam);
     }
 }

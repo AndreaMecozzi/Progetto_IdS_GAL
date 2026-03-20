@@ -43,4 +43,16 @@ public class TeamController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PreAuthorize("hasAuthority('UTENTE')")
+    @PostMapping("/modifica")
+    public ResponseEntity<Object> modificaTeam(Authentication authentication, @RequestBody String nuovoNome){
+        String username=authentication.getName();
+        try{
+            teamHandler.modificaTeam(username, nuovoNome);
+            return new ResponseEntity<>("Team modificato con successo",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
