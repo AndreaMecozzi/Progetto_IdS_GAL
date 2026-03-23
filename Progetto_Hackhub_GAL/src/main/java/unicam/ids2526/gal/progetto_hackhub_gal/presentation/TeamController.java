@@ -55,4 +55,16 @@ public class TeamController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PreAuthorize("hasAuthority('UTENTE')")
+    @PostMapping("/abbandona")
+    public ResponseEntity<Object> abbandonaTeam (Authentication authentication){
+        String username=authentication.getName();
+        try{
+            teamHandler.abbandonaTeam(username);
+            return new ResponseEntity<>("Abbandono del team avvenuto con successo",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

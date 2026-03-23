@@ -126,4 +126,16 @@ public class HackathonController {
         }
     }
 
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
+    @PostMapping("/aggiungiMentore")
+    public ResponseEntity<Object> aggiungiMentore(Authentication authentication, @RequestParam String nomeHackathon, @RequestParam String mentore ){
+        String username=authentication.getName();
+        try{
+            hackathonHandler.aggiungiMentore(username, nomeHackathon, mentore);
+            return new ResponseEntity<>("Mentore aggiunto con successo",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

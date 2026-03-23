@@ -74,6 +74,8 @@ public class Team {
         this.utenti.add(utente);
     }
 
+    public void removeUtente(Utente utente) { this.utenti.remove(utente); }
+
     public Sottomissione getSottomissione() {
         return sottomissione;
     }

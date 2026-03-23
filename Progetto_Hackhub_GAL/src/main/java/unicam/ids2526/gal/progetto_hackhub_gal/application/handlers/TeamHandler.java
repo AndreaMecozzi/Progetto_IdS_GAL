@@ -81,4 +81,24 @@ public class TeamHandler {
         mioTeam.setNome(nuovoNome);
         teamRep.save(mioTeam);
     }
+
+    public void abbandonaTeam(String username) throws Exception{
+        // recupero il team di appartentenza
+        Team mioTeam = teamRep.findByUtenti_Username(username)
+            .orElseThrow(()->new Exception("Errore: non appartieni a nessun team"));
+
+        /* recupero l'hackathon a cui sono iscritto, se sono iscritto ad un hackathon
+            non posso abbandonare il team */
+        Hackathon hackathon = mioTeam.getHackathon();
+        if(hackathon != null){
+            throw new Exception("Errore: impossibile abbandonare il team");
+        }
+
+        // rimuovo l'utente dalla lista dei partecipanti del Team
+        Utente utente = utenteRep.findByUsername(username)
+                .orElseThrow(()->new Exception("Errore: non esiste un utente con questo nome"));
+
+        mioTeam.removeUtente(utente);
+        teamRep.save(mioTeam);
+    }
 }

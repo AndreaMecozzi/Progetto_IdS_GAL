@@ -251,6 +251,35 @@ public class HackathonHandler {
         //salvataggio
         hackathonRep.save(h);
         teamRep.save(t);
+    }
+
+    public void aggiungiMentore(String username, String nomeHackathon, String usernameMentore) throws Exception{
+        // recupero l'hackathon
+        Hackathon hackathon = hackathonRep.findByNome(nomeHackathon).orElseThrow(
+                ()->new Exception("Errore: L'hackathon non esiste"));
+
+        // controllo dello stato dell'hackathon
+        if(!hackathon.getStato().equals("IN_ISCRIZIONE")){
+            throw new Exception("Errore: Impossibile aggiungere mentori");
+        }
+
+        // controlli sul mentore
+        Utente mentore = utenteRep.findByUsername(usernameMentore).orElseThrow(
+                ()->new Exception("Errore: il mentore non esiste"));
+        if(!mentore.getRuolo().equals(Ruolo.MENTORE)){
+            throw new Exception("Errore: l'utente passato non è un mentore");
+        }
+
+        List<Utente> Mentori = hackathon.getMentori();
+        for (Utente m : Mentori) {
+            if (m.getUserId() == mentore.getUserId()) {
+                throw new Exception("Errore: questo mentore è già assegnato a questo hackathon");
+            }
+        }
+
+        // aggiunta del mentore e salvataggio
+        hackathon.addMentore(mentore);
+        hackathonRep.save(hackathon);
 
     }
 }

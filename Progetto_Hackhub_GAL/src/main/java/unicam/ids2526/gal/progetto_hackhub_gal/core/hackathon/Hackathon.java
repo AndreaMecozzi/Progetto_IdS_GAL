@@ -44,7 +44,7 @@ public class Hackathon {
             joinColumns = @JoinColumn(name = "hackathon_id"), // Colonna verso l'Hackathon
             inverseJoinColumns = @JoinColumn(name = "mentore_id") // Colonna verso l'Utente (Mentore)
     )
-    private List<Utente> mentore;
+    private List<Utente> mentori;
 
     @ManyToOne
     @JoinColumn(name="giudice_id", nullable = false)
@@ -66,7 +66,7 @@ public class Hackathon {
         this.regolamento = regolamento;
         this.organizzatore = organizzatore;
         this.giudice = giudice;
-        this.mentore = mentore;
+        this.mentori = mentore;
         this.teamPartecipanti = new ArrayList<Team>();
     }
 
@@ -122,13 +122,13 @@ public class Hackathon {
         this.organizzatore = organizzatore;
     }
 
-    public List<Utente> getMentore() {
-        return mentore;
+    public List<Utente> getMentori() {
+        return mentori;
     }
     public void setMentore(List<Utente> mentore) {
-        this.mentore = mentore;
+        this.mentori = mentore;
     }
-    public void addMentore(Utente mentore) { this.mentore.add(mentore);}
+    public void addMentore(Utente mentore) { this.mentori.add(mentore);}
 
     public Utente getGiudice() {
         return giudice;
