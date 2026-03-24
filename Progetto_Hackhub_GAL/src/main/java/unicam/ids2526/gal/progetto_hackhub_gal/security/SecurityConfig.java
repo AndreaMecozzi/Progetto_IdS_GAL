@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/utenti/login").permitAll()
-                        .requestMatchers("/utenti/registrati").permitAll()
+                        .requestMatchers("/utenti/registra").permitAll()
                         .requestMatchers("/hackathon/elenco").permitAll()
                         .requestMatchers("/hackathon/visualizzaRegolamento").permitAll()
                         .requestMatchers("/error").permitAll()

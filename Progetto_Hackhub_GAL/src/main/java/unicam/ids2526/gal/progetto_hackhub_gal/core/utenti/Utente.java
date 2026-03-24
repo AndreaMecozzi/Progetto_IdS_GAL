@@ -21,7 +21,12 @@ public class Utente {
     @Column(nullable = false)
     private Ruolo ruolo;
 
-    public Utente() {}
+    public Utente() {
+        this.username = null;
+        this.email = null;
+        this.password = null;
+        this.ruolo = null;
+    }
 
     public Utente(String username, String email, String password, Ruolo ruolo) {
         this.username = username;

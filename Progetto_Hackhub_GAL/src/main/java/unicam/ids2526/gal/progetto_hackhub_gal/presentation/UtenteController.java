@@ -3,6 +3,7 @@ package unicam.ids2526.gal.progetto_hackhub_gal.presentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import unicam.ids2526.gal.progetto_hackhub_gal.application.dto.RegistraUtenteDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.UtenteHandler;
 import unicam.ids2526.gal.progetto_hackhub_gal.security.LoginRequest;
 
@@ -25,5 +26,20 @@ public class UtenteController {
         return token
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenziali non valide"));
+    }
+
+    @PostMapping("/registra")
+    public ResponseEntity<String> registrazione(@RequestBody RegistraUtenteDTO dto) {
+        try{
+            utenteHandler.registrazione(
+                    dto.getEmail(),
+                    dto.getUsername(),
+                    dto.getPassword(),
+                    dto.getRuolo()
+            );
+            return new ResponseEntity<>("Utente registrato con successo",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 }
