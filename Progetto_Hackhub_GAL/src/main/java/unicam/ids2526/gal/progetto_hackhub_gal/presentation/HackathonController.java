@@ -128,11 +128,23 @@ public class HackathonController {
 
     @PreAuthorize("hasAuthority('ORGANIZZATORE')")
     @PostMapping("/aggiungiMentore")
-    public ResponseEntity<Object> aggiungiMentore(Authentication authentication, @RequestParam String nomeHackathon, @RequestParam String mentore ){
+    public ResponseEntity<Object> aggiungiMentore(Authentication authentication, @RequestParam String nomeHackathon, @RequestParam String usernameMentore ){
         String username=authentication.getName();
         try{
-            hackathonHandler.aggiungiMentore(username, nomeHackathon, mentore);
+            hackathonHandler.aggiungiMentore(username, nomeHackathon, usernameMentore);
             return new ResponseEntity<>("Mentore aggiunto con successo",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
+    @PostMapping("/rimuoviMentore")
+    public ResponseEntity<Object> rimuoviMentore(Authentication authentication, @RequestParam String nomeHackathon, @RequestParam String usernameMentore ){
+        String username=authentication.getName();
+        try{
+            hackathonHandler.rimuoviMentore(username, nomeHackathon, usernameMentore);
+            return new ResponseEntity<>("Mentore rimosso con successo",HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

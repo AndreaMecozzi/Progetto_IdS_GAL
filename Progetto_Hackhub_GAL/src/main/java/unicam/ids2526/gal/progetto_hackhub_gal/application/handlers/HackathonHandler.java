@@ -270,8 +270,8 @@ public class HackathonHandler {
             throw new Exception("Errore: l'utente passato non è un mentore");
         }
 
-        List<Utente> Mentori = hackathon.getMentori();
-        for (Utente m : Mentori) {
+        List<Utente> mentori = hackathon.getMentori();
+        for (Utente m : mentori) {
             if (m.getUserId() == mentore.getUserId()) {
                 throw new Exception("Errore: questo mentore è già assegnato a questo hackathon");
             }
@@ -281,5 +281,37 @@ public class HackathonHandler {
         hackathon.addMentore(mentore);
         hackathonRep.save(hackathon);
 
+    }
+
+    public void rimuoviMentore(String username, String nomeHackathon, String usernameMentore) throws Exception{
+        // recupero l'hackathon
+        Hackathon hackathon = hackathonRep.findByNome(nomeHackathon).orElseThrow(
+                ()->new Exception("Errore: L'hackathon non esiste"));
+
+        // controllo dello stato dell'hackathon
+        if(!hackathon.getStato().equals("IN_ISCRIZIONE")){
+            throw new Exception("Errore: Impossibile rimuovere mentore");
+        }
+
+        // controlli sul mentore
+        Utente mentore = utenteRep.findByUsername(usernameMentore).orElseThrow(
+                ()->new Exception("Errore: il mentore non esiste"));
+        if(!mentore.getRuolo().equals(Ruolo.MENTORE)){
+            throw new Exception("Errore: l'utente passato non è un mentore");
+        }
+
+        List<Utente> mentori = hackathon.getMentori();
+
+        if(mentori.size()==1){
+            throw new Exception("Errore: impossibile eliminare l'ultimo mentore rimasto");
+        }
+
+        if(mentori.contains(mentore)){
+            // rimozione del mentore e salvataggio
+            hackathon.removeMentore(mentore);
+            hackathonRep.save(hackathon);
+        }else{
+            throw new Exception("Errore: il mentore non è assegnato a questo hackathon");
+        }
     }
 }
