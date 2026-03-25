@@ -18,6 +18,9 @@ INSERT INTO utente (username, email, password, ruolo)
 VALUES ('mentore_esperto', 'mentore@hackhub.it', 'mentor2026', 'MENTORE');
 
 INSERT INTO utente (username, email, password, ruolo)
+VALUES ('mentore_2_prova', 'mentore2@hackhub.it', 'mentor22026', 'MENTORE');
+
+INSERT INTO utente (username, email, password, ruolo)
 VALUES ('admin_org', 'org@hackhub.it', 'adminPower!', 'ORGANIZZATORE');
 
 

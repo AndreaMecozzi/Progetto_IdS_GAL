@@ -128,7 +128,8 @@ public class HackathonController {
 
     @PreAuthorize("hasAuthority('ORGANIZZATORE')")
     @PostMapping("/aggiungiMentore")
-    public ResponseEntity<Object> aggiungiMentore(Authentication authentication, @RequestParam String nomeHackathon, @RequestParam String usernameMentore ){
+    public ResponseEntity<Object> aggiungiMentore(Authentication authentication, @RequestParam String nomeHackathon,
+                                                  @RequestParam String usernameMentore ){
         String username=authentication.getName();
         try{
             hackathonHandler.aggiungiMentore(username, nomeHackathon, usernameMentore);
