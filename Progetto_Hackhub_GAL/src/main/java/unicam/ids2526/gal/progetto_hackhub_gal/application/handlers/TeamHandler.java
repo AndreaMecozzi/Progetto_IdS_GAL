@@ -82,6 +82,14 @@ public class TeamHandler {
         teamRep.save(mioTeam);
     }
 
+
+    /**
+     * Permette a un utente di abbandonare il Team di appartenenza
+     *
+     * @param username l'username dell'utente che vuole abbandonare il proprio team
+     * @return void
+     * @throws Exception se l'utente non appartiene a nessun team, se il team è associato a un hackathon, o se l'utente non esiste
+     */
     public void abbandonaTeam(String username) throws Exception{
         // recupero il team di appartentenza
         Team mioTeam = teamRep.findByUtenti_Username(username)

@@ -21,6 +21,14 @@ public class UtenteHandler {
         this.builderUtente = new ConcreteBuilderUtente();
     }
 
+
+    /**
+     * Effettua il login di un utente e restituisce un token JWT se le credenziali sono corrette
+     *
+     * @param username l'username dell'utente che vuole effettuare il login
+     * @param password la password dell'utente
+     * @return Optional contenente il token JWT se il login ha successo, Optional vuoto altrimenti
+     */
     public Optional<String> login(String username, String password) {
         Optional<Utente> utenteOpt = utenteRep.findByUsername(username);
 
@@ -34,6 +42,18 @@ public class UtenteHandler {
         return Optional.empty();
     }
 
+
+    /**
+     * Registra un nuovo utente nel sistema
+     *
+     * @param email l'email dell'utente da registrare
+     * @param username l'username scelto dall'utente
+     * @param password la password dell'utente
+     * @param ruolo il ruolo dell'utente (UTENTE, GIUDICE, ORGANIZZATORE, MENTORE)
+     * @return void
+     * @throws Exception se l'email non è valida, se l'username è nullo o già utilizzato,
+     *                   se la password è nulla o se il ruolo non è valido
+     */
     public void registrazione(String email,
                               String username,
                               String password,
