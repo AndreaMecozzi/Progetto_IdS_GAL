@@ -33,6 +33,26 @@ public class HackathonHandler {
         this.teamRep = teamRep;
     }
 
+
+    /**
+     * Crea un nuovo hackathon e lo salva nel sistema
+     *
+     * @param nomeHackathon   il nome univoco dell'hackathon
+     * @param premio          il montepremi dell'hackathon (minimo 100)
+     * @param dimensioneTeam  il numero massimo di membri per team (minimo 1)
+     * @param regolamento     il file del regolamento in formato PDF o TXT
+     * @param userOrg         lo username dell'utente organizzatore
+     * @param userGiudice     lo username dell'utente con ruolo GIUDICE
+     * @param usersMentori    la lista degli username degli utenti con ruolo MENTORE
+     *
+     * @throws Exception se il nome dell'hackathon è già in uso o vuoto
+     * @throws Exception se il premio è invalido o inferiore a 100
+     * @throws Exception se la dimensione del team è nulla o inferiore a 1
+     * @throws Exception se il regolamento è nullo, vuoto o in un formato non supportato
+     * @throws Exception se il giudice non esiste o non possiede il ruolo GIUDICE
+     * @throws Exception se uno dei mentori non esiste o non possiede il ruolo MENTORE
+     * @throws RuntimeException se si verifica un errore durante il salvataggio del file regolamento
+     */
     public void creaHackathon(String nomeHackathon, Double premio,
                               Integer dimensioneTeam, MultipartFile regolamento,
                               String userOrg, String userGiudice, List<String> usersMentori) throws Exception {
@@ -100,6 +120,19 @@ public class HackathonHandler {
         hackathonRep.save(hackathon);
     }
 
+
+    /**
+     * Iscrive il team di un utente ad un hackathon
+     *
+     * @param username      l' username dell'utente che richiede l'iscrizione
+     * @param nomeHackathon il nome dell'hackathon a cui iscriversi
+     *
+     * @throws Exception se l'utente non appartiene ad alcun team
+     * @throws Exception se il team è già iscritto ad un hackathon
+     * @throws Exception se l'hackathon specificato non esiste
+     * @throws Exception se l'hackathon non è nella fase di iscrizione
+     * @throws Exception se la dimensione del team supera quella massima prevista dall'hackathon
+     */
     public void iscriviTeam(String username, String nomeHackathon) throws Exception {
         Team team=teamRep.findByUtenti_Username(username).orElseThrow(
                 ()->new Exception("Bisogna avere un team per iscriversi"));
@@ -126,6 +159,16 @@ public class HackathonHandler {
         teamRep.save(team);
     }
 
+
+    /**
+     * Recupera il file del regolamento di un hackathon
+     *
+     * @param nomeHackathon il nome dell'hackathon di cui visualizzare il regolamento
+     *
+     * @return il file del regolamento associato all'hackathon
+     *
+     * @throws Exception se l'hackathon specificato non esiste
+     */
     public File visualizzaRegolamento(String nomeHackathon) throws Exception{
         // recupero l'Hackathon dal nome
         Hackathon h = hackathonRep.findByNome(nomeHackathon).orElseThrow(
@@ -135,6 +178,14 @@ public class HackathonHandler {
         return regolamento;
     }
 
+
+    /**
+     * Restituisce l'elenco di tutti gli hackathon presenti nel sistema
+     *
+     * @return la lista di tutti gli hackathon registrati
+     *
+     * @throws Exception se non è presente alcun hackathon nel sistema
+     */
     public List<Hackathon> elencoHackathon() throws Exception{
         List<Hackathon> listaHackathon = hackathonRep.findAll();
 
@@ -147,6 +198,17 @@ public class HackathonHandler {
         return listaHackathon;
     }
 
+
+    /**
+     * Rimuove un hackathon dal sistema se ancora in fase di iscrizione
+     *
+     * @param username      l' username dell'organizzatore che richiede la rimozione
+     * @param nomeHackathon il nome dell'hackathon da rimuovere
+     *
+     * @throws Exception se l'hackathon specificato non esiste
+     * @throws Exception se l'utente non è l'organizzatore dell'hackathon
+     * @throws Exception se l'hackathon non è più in fase di iscrizione
+     */
     @Transactional
     public void rimuoviHackathon(String username, String nomeHackathon) throws Exception{
         // recupero l'hackathon dal nome
@@ -175,6 +237,20 @@ public class HackathonHandler {
     }
 
 
+    /**
+     * Aggiorna il regolamento di un hackathon ancora in fase di iscrizione
+     *
+     * @param username      l? username dell'organizzatore che richiede l'aggiornamento
+     * @param nomeHackathon il nome dell'hackathon di cui aggiornare il regolamento
+     * @param regolamento   il nuovo file del regolamento in formato PDF o TXT
+     *
+     * @throws Exception se l'hackathon specificato non esiste
+     * @throws Exception se l'utente non è l'organizzatore dell'hackathon
+     * @throws Exception se l'hackathon non è più in fase di iscrizione
+     * @throws Exception se il file del regolamento è nullo o vuoto
+     * @throws Exception se il formato del file non è PDF o TXT
+     * @throws RuntimeException se si verifica un errore durante il salvataggio del nuovo file regolamento
+     */
     public void aggiornaRegolamento(String username, String nomeHackathon, MultipartFile regolamento) throws Exception{
         // recupero l'hackathon dal nome
         Hackathon hackathon= hackathonRep.findByNome(nomeHackathon).orElseThrow(
@@ -224,6 +300,16 @@ public class HackathonHandler {
         hackathonRep.save(hackathon);
     }
 
+
+    /**
+     * Disiscrive il team di un utente dall'hackathon a cui è attualmente iscritto
+     *
+     * @param username l' username dell'utente che richiede la disiscrizione
+     *
+     * @throws Exception se l'utente non appartiene ad alcun team
+     * @throws Exception se il team non è iscritto ad alcun hackathon
+     * @throws Exception se l'hackathon è in fase di valutazione o è già concluso
+     */
     public void disiscriviTeam(String username) throws Exception {
         // recupero del team del richiedente
         Team t = teamRep.findByUtenti_Username(username).orElseThrow(
@@ -253,6 +339,20 @@ public class HackathonHandler {
         teamRep.save(t);
     }
 
+
+    /**
+     * Aggiunge un mentore ad un hackathon ancora in fase di iscrizione
+     *
+     * @param username        l'username dell'organizzatore che richiede l'aggiunta
+     * @param nomeHackathon   il nome dell'hackathon a cui aggiungere il mentore
+     * @param usernameMentore l'username dell'utente da aggiungere come mentore
+     *
+     * @throws Exception se l'hackathon specificato non esiste
+     * @throws Exception se l'hackathon non è in fase di iscrizione
+     * @throws Exception se l'utente specificato come mentore non esiste
+     * @throws Exception se l'utente specificato non possiede il ruolo MENTORE
+     * @throws Exception se il mentore è già assegnato all'hackathon
+     */
     public void aggiungiMentore(String username, String nomeHackathon, String usernameMentore) throws Exception{
         // recupero l'hackathon
         Hackathon hackathon = hackathonRep.findByNome(nomeHackathon).orElseThrow(
@@ -283,6 +383,21 @@ public class HackathonHandler {
 
     }
 
+
+    /**
+     * Rimuove un mentore da un hackathon ancora in fase di iscrizione
+     *
+     * @param username        l'username dell'organizzatore che richiede la rimozione
+     * @param nomeHackathon   il nome dell'hackathon da cui rimuovere il mentore
+     * @param usernameMentore lo username del mentore da rimuovere
+     *
+     * @throws Exception se l'hackathon specificato non esiste
+     * @throws Exception se l'hackathon non è in fase di iscrizione
+     * @throws Exception se l'utente specificato come mentore non esiste
+     * @throws Exception se l'utente specificato non possiede il ruolo MENTORE
+     * @throws Exception se il mentore è l'ultimo rimasto nell'hackathon
+     * @throws Exception se il mentore non è assegnato all'hackathon
+     */
     public void rimuoviMentore(String username, String nomeHackathon, String usernameMentore) throws Exception{
         // recupero l'hackathon
         Hackathon hackathon = hackathonRep.findByNome(nomeHackathon).orElseThrow(
