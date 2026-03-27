@@ -27,7 +27,7 @@ public class SegnalazioneHandler {
     private HackathonRepository hackathonRep;
 
     public void segnalaTeam(String username, String nomeTeam, String motivazione) throws Exception{
-        // recuper del team da segnalare
+        // recupera del team da segnalare
         Team team = teamRep.findByNome(nomeTeam)
                 .orElseThrow(()->new Exception("Errore: il team non esiste"));
 
