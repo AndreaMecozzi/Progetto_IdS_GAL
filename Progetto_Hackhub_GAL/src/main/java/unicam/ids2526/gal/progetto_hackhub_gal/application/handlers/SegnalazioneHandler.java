@@ -65,12 +65,20 @@ public class SegnalazioneHandler {
 
     }
 
-    /*
-    public List<Segnalazione> visualizzaSegnalazioni(String username, String nomeHackathon) {
-        //TODO: implementare
+
+    public List<Segnalazione> visualizzaSegnalazioni(String username) throws Exception {
+        Utente organizzatore = userRep.findByUsername(username)
+                .orElseThrow(() -> new Exception("Errore: l'organizzatore non esiste"));
+
+        List<Hackathon> hackathons = hackathonRep.findByOrganizzatore(organizzatore);
+        if (hackathons.isEmpty()) {
+            throw new Exception("Errore: l'organizzatore non gestisce hackathon");
+        }
+
+        return segnalazioneRep.findByHackathonIn(hackathons);
     }
 
-     */
+
 
 
 }

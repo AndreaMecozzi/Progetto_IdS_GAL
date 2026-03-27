@@ -31,16 +31,18 @@ public class SegnalazioneController {
         }
     }
 
-    /*
+
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
     @GetMapping("/visualizza")
-    public List<Segnalazione> visualizzaSegnalazioni(Authentication autenticazione,@RequestParam String nomeHackathon) {
-        return segnalazioneHandler.visualizzaSegnalazioni(autenticazione.getName(), nomeHackathon);
+    public ResponseEntity<Object> visualizzaSegnalazioni(Authentication authentication) {
+        String username = authentication.getName();
+        try {
+            List<Segnalazione> segnalazioni = segnalazioneHandler.visualizzaSegnalazioni(username);
+            return new ResponseEntity<>(segnalazioni, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
-
-
-     */
-
-
 
 
 }
