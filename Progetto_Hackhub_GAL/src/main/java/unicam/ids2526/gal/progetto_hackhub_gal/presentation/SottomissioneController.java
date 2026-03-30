@@ -8,8 +8,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.SottomissioneHandler;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Sottomissione;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.SottomissioneDTO;
 
-import java.io.File;
+import java.util.List;
 
 @RestController
 @RequestMapping("/sottomissioni")
@@ -50,9 +52,16 @@ public class SottomissioneController {
     @PreAuthorize("hasAuthority('UTENTE')")
     @GetMapping("/utente/visualizza")
     public ResponseEntity<Object> visualizzaSottomissione(Authentication authentication) {
-        String username= authentication.getName();
+        String username = authentication.getName();
         try {
-            return new ResponseEntity<>(sottomissioneHandler.visualizzaSottomissione(username), HttpStatus.OK);
+            // Restituisce un singolo SottomissioneDTO
+            Sottomissione sottomissione = sottomissioneHandler.visualizzaSottomissione(username);
+            SottomissioneDTO sottomissioneDTO = new SottomissioneDTO(
+                    sottomissione.getSottomissioneID(),
+                    sottomissione.getNome(),
+                    (sottomissione.getValutazione() != null) ? String.valueOf(sottomissione.getValutazione().getVoto()) : "Non ancora valutata"
+            );
+            return new ResponseEntity<>(sottomissioneDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -61,11 +70,11 @@ public class SottomissioneController {
     @PreAuthorize("hasAuthority('GIUDICE')")
     @GetMapping("/giudice/visualizza")
     public ResponseEntity<Object> visualizzaSottomissioni(Authentication authentication,
-                                                          @RequestBody String nomeHackathon) {
-        String username= authentication.getName();
-        try{
-            return new ResponseEntity<>(sottomissioneHandler.visualizzaSottomissioni(username,
-                    nomeHackathon),HttpStatus.OK);
+                                                          @RequestParam String nomeHackathon) {
+        String username = authentication.getName();
+        try {
+            List<SottomissioneDTO> SottomissioneDTOS = sottomissioneHandler.visualizzaSottomissioni(username, nomeHackathon);
+            return new ResponseEntity<>(SottomissioneDTOS, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

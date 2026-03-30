@@ -3,6 +3,7 @@ package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 import org.springframework.stereotype.Service;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.team.TeamDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
@@ -46,12 +47,19 @@ public class TeamHandler {
      * @throws Exception se il team non esiste o l'utente non è membro del team
      */
 
-    public Team visualizzaTeam(String username) throws Exception{
+    public TeamDTO visualizzaTeam(String username) throws Exception {
+        // Cerchiamo il team a cui appartiene l'utente
         Team team = teamRep.findByUtenti_Username(username)
-                .orElseThrow(()->new Exception("Errore: Non appartieni a nessun team"));
+                .orElseThrow(() -> new Exception("Errore: Non appartieni a nessun team"));
 
-        return team;
-
+        // Mappatura manuale verso il DTO
+        return new TeamDTO(
+                team.getTeamId(),
+                team.getNome(),
+                team.getHackathon().getNome(),
+                team.getUtenti().stream().map(Utente::getUsername).toList(),
+                team.getUtenti().stream().map(Utente::getEmail).toList()
+        );
     }
 
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.dto.CreaHackathonDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.HackathonHandler;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.HackathonDTO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -80,10 +81,11 @@ public class HackathonController {
 
 
     @GetMapping("/elenco")
-    public ResponseEntity<Object> elencoHackathon(){
-        try{
-            return new ResponseEntity<>(hackathonHandler.elencoHackathon(),HttpStatus.OK);
-        }catch (Exception e){
+    public ResponseEntity<Object> elencoHackathon() {
+        try {
+            List<HackathonDTO> hackathonDTOs = hackathonHandler.elencoHackathon();
+            return new ResponseEntity<>(hackathonDTOs, HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

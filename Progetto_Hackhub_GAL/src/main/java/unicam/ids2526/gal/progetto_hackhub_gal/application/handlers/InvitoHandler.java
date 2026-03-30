@@ -3,6 +3,7 @@ package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 import org.springframework.stereotype.Service;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.EsitoInvito;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.Invito;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.InvitoDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Ruolo;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
@@ -75,20 +76,20 @@ public class InvitoHandler {
      *
      */
 
-    public List<Invito> visualizzaInviti(String username) throws Exception{
-        Utente utente = userRep.findByUsername(username).orElseThrow(
-                ()->new Exception("Errore: Utente non trovato"));
+    public List<InvitoDTO> visualizzaInviti(String username) throws Exception {
+        Utente utente = userRep.findByUsername(username)
+                .orElseThrow(() -> new Exception("Utente non trovato"));
 
-        //chiama il metodo del repository e cerca tutti gli inviti dove il campo ricevente
-        //corrisponde all'utente trovato
+        // Recupera gli inviti (ad esempio quelli ricevuti)
         List<Invito> inviti = invitoRep.findByRicevente(utente);
 
-
-        if(inviti.isEmpty()){
-            return null;
-        }else{
-            return inviti;
-        }
+        // Trasformazione in DTO
+        return inviti.stream().map(invito -> new InvitoDTO(
+                invito.getInvitoId(),
+                invito.getMittente().getUsername(),
+                invito.getMittente().getEmail(),
+                invito.getMessaggio()
+        )).toList();
     }
 
     /**

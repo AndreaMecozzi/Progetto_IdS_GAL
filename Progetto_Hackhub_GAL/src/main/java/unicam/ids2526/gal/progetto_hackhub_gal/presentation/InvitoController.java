@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.InvitoHandler;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.Invito;
 import org.springframework.security.core.Authentication;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.InvitoDTO;
 
 import java.util.List;
 
@@ -34,16 +35,16 @@ public class InvitoController {
 
     @PreAuthorize("hasAuthority('UTENTE')")
     @GetMapping("/visualizza")
-    public ResponseEntity<Object> visualizzaInviti(Authentication autentication){
-        String username = autentication.getName();
+    public ResponseEntity<Object> visualizzaInviti(Authentication authentication) {
+        String username = authentication.getName();
         try {
-         //chiama il metodo dell'handler
-            List<Invito> inviti = invitoHandler.visualizzaInviti(username);
-            if (inviti == null) {
+            List<InvitoDTO> invitiDTOs = invitoHandler.visualizzaInviti(username);
+            if (invitiDTOs == null || invitiDTOs.isEmpty()) {
                 return new ResponseEntity<>("Non ci sono inviti", HttpStatus.OK);
             }
-            return new ResponseEntity<>(inviti, HttpStatus.OK);
-        }catch (Exception e){
+
+            return new ResponseEntity<>(invitiDTOs, HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

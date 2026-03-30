@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.HackathonDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.InIscrizione;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.StatoHackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
@@ -186,16 +187,27 @@ public class HackathonHandler {
      *
      * @throws Exception se non è presente alcun hackathon nel sistema
      */
-    public List<Hackathon> elencoHackathon() throws Exception{
+    public List<HackathonDTO> elencoHackathon() throws Exception {
         List<Hackathon> listaHackathon = hackathonRep.findAll();
 
-        // controllo se la lista è vuota
         if (listaHackathon.isEmpty()) {
             throw new Exception("Non ci sono Hackathon");
         }
 
-        // restituisco gli hackathon Trovati;
-        return listaHackathon;
+        // Convertiamo ogni Hackathon della lista in un HackathonDTO
+        return listaHackathon.stream().map(h -> new HackathonDTO(
+                h.getNome(),
+                h.getPremio(),
+                h.getDimenisoneTeam(),
+                h.getDataInizioStato().toString(),
+                h.getStato(),
+                h.getTeamPartecipanti().stream().map(Team::getNome).toList(),
+                h.getOrganizzatore().getUsername(),
+                h.getOrganizzatore().getEmail(),
+                h.getGiudice().getEmail(),
+                h.getMentori().stream().map(Utente::getUsername).toList(),
+                h.getMentori().stream().map(Utente::getEmail).toList()
+        )).toList();
     }
 
 

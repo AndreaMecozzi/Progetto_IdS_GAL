@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.segnalazione.Segnalazione;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.segnalazione.SegnalazioneDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.HackathonRepository;
@@ -66,7 +67,7 @@ public class SegnalazioneHandler {
     }
 
 
-    public List<Segnalazione> visualizzaSegnalazioni(String username) throws Exception {
+    public List<SegnalazioneDTO> visualizzaSegnalazioni(String username) throws Exception {
         Utente organizzatore = userRep.findByUsername(username)
                 .orElseThrow(() -> new Exception("Errore: l'organizzatore non esiste"));
 
@@ -75,7 +76,17 @@ public class SegnalazioneHandler {
             throw new Exception("Errore: l'organizzatore non gestisce hackathon");
         }
 
-        return segnalazioneRep.findByHackathonIn(hackathons);
+        List<Segnalazione> segnalazioni = segnalazioneRep.findByHackathonIn(hackathons);
+
+        // traduziione delle entità in DTO
+        return segnalazioni.stream().map(s -> new SegnalazioneDTO(
+                s.getSegnalazioneID(),
+                s.getMittente().getUsername(),
+                s.getMittente().getEmail(),
+                s.getMittente().getUserId(),
+                s.getTeam().getNome(),
+                s.getHackathon().getNome()
+        )).toList();
     }
 
 

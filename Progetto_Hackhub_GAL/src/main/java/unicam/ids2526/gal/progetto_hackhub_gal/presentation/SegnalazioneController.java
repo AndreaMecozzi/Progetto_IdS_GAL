@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.SegnalazioneHandler;
 import org.springframework.security.core.Authentication;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.segnalazione.Segnalazione;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.segnalazione.SegnalazioneDTO;
 
 import java.util.List;
 
@@ -37,8 +38,11 @@ public class SegnalazioneController {
     public ResponseEntity<Object> visualizzaSegnalazioni(Authentication authentication) {
         String username = authentication.getName();
         try {
-            List<Segnalazione> segnalazioni = segnalazioneHandler.visualizzaSegnalazioni(username);
-            return new ResponseEntity<>(segnalazioni, HttpStatus.OK);
+            List<SegnalazioneDTO> segnalazioniDTOs= segnalazioneHandler.visualizzaSegnalazioni(username);
+            if (segnalazioniDTOs.isEmpty()) {
+                return new ResponseEntity<>("Non ci sono segnalazioni per i tuoi hackathon", HttpStatus.OK);
+            }
+            return new ResponseEntity<>(segnalazioniDTOs, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

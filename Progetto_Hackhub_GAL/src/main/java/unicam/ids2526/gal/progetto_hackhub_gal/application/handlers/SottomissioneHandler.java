@@ -5,8 +5,8 @@ import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Sottomissione;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Valutazione;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.SottomissioneDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.*;
 
 import java.io.File;
@@ -156,18 +156,35 @@ public class SottomissioneHandler {
                 () -> new Exception("Errore: la sottomissione non esiste"));
     }
 
-    public List<Sottomissione> visualizzaSottomissioni(String username,
-                                                       String nomeHackathon) throws Exception {
+    public List<SottomissioneDTO> visualizzaSottomissioni(String username,
+                                                          String nomeHackathon) throws Exception {
         Hackathon hackathon=hackathonRep.findByNome(nomeHackathon).orElseThrow(
                 ()->new Exception("Errore: Hackathon non esistente"));
 
         List<Team> teams=hackathon.getTeamPartecipanti();
         List<Sottomissione> sottomissioni=new ArrayList<Sottomissione>();
+        List<SottomissioneDTO> sottomissioniDTO = new ArrayList<>();
+
         for(Team team:teams){
-            sottomissioni.add(team.getSottomissione());
+            Sottomissione s = team.getSottomissione();
+            if(s!=null){
+                sottomissioni.add(s);
+                String voto = (s.getValutazione() != null) ? String.valueOf(s.getValutazione().getVoto()) : "Non ancora valutata";
+
+                SottomissioneDTO dto = new SottomissioneDTO(
+                        s.getSottomissioneID(),
+                        s.getNome(),
+                        voto
+                );
+                sottomissioniDTO.add(dto);
+            }
+
         }
 
-        return sottomissioni;
+        if(sottomissioniDTO.isEmpty()){
+            throw new Exception("Errore: non ci sono sottomissioni caricate");
+        }
+        return sottomissioniDTO;
     }
 
     public void valutaSottomissione(String username,

@@ -1,5 +1,7 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.core.segnalazione;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,14 +24,16 @@ public class Segnalazione {
     @JoinColumn(name = "mittente_id")
     private Utente mittente;
 
+    @JsonIgnoreProperties("organizzatore")
     @ManyToOne
-    @JoinColumn(name = "team_id")
+    @JoinColumn(name = "team_id", nullable = false)
     private Team team;
 
     private String motivazione;
 
+    @JsonIgnoreProperties("organizzatore")
     @ManyToOne
-    @JoinColumn(name = "hackathon_id")
+    @JoinColumn(name = "hackathon_id", nullable = false)
     private Hackathon hackathon;
 
 
