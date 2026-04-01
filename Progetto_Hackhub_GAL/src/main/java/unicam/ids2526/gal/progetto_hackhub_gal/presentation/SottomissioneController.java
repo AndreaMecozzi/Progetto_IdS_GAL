@@ -1,5 +1,8 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.presentation;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +14,7 @@ import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.Sottomission
 import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Sottomissione;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.SottomissioneDTO;
 
+import java.io.File;
 import java.util.List;
 
 @RestController
@@ -94,4 +98,31 @@ public class SottomissioneController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PreAuthorize("hasAnyAuthority('UTENTE', 'GIUDICE')")
+    @GetMapping("/scarica")
+    public ResponseEntity<Resource> scaricaSottomissione(
+            Authentication authentication,
+            @RequestParam Long sottomissioneId) {
+        String username = authentication.getName();
+        boolean isGiudice = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("GIUDICE"));
+        try {
+            String filePath = sottomissioneHandler.scaricaSottomissione(
+                    username, sottomissioneId, isGiudice);
+            File file = new File(filePath);
+            if (!file.exists()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            Resource resource = new FileSystemResource(file);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=\"" + file.getName() + "\"")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(resource);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

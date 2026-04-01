@@ -226,5 +226,47 @@ public class SottomissioneHandler {
         }
 
     }
+
+
+    /**
+     * Restituisce il percorso del file della sottomissione identificata dall'ID.
+     * - UTENTE: verifica che appartenga al team di quella sottomissione
+     * - GIUDICE: verifica che sia il giudice dell'hackathon di quella sottomissione
+     *
+     * @param username        l'utente autenticato
+     * @param sottomissioneId l'ID della sottomissione da scaricare
+     * @param isGiudice       true se il chiamante ha ruolo GIUDICE
+     * @throws Exception se la sottomissione non esiste, il file manca, o l'utente non è autorizzato
+     */
+    public String scaricaSottomissione(String username,
+                                       Long sottomissioneId,
+                                       boolean isGiudice) throws Exception {
+
+        Sottomissione sottomissione = sottomissioneRep.findById(sottomissioneId).orElseThrow(
+                () -> new Exception("Errore: Sottomissione non trovata"));
+
+        Team team = sottomissione.getTeam();
+        Hackathon hackathon = team.getHackathon();
+
+        if (isGiudice) {
+            if (hackathon == null || !username.equals(hackathon.getGiudice().getUsername())) {
+                throw new Exception("Errore: Non sei il giudice dell'hackathon di questa sottomissione");
+            }
+        } else {
+            // verifica che l'utente appartenga al team della sottomissione
+            boolean isMembro = team.getUtenti().stream()
+                    .anyMatch(u -> u.getUsername().equals(username));
+            if (!isMembro) {
+                throw new Exception("Errore: Non appartieni al team di questa sottomissione");
+            }
+        }
+
+        String filePath = sottomissione.getFile();
+        if (filePath == null || filePath.isBlank()) {
+            throw new Exception("Errore: Nessun file caricato per questa sottomissione");
+        }
+
+        return filePath;
+    }
 }
 
