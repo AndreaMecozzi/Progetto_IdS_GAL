@@ -175,8 +175,8 @@ public class HackathonHandler {
         Hackathon h = hackathonRep.findByNome(nomeHackathon).orElseThrow(
                 ()->new Exception("Hackathon non esistente"));
 
-        File regolamento=new File(h.getRegolamento());
-        return regolamento;
+        File fileRegolamento=new File(h.getRegolamento());
+        return fileRegolamento;
     }
 
 

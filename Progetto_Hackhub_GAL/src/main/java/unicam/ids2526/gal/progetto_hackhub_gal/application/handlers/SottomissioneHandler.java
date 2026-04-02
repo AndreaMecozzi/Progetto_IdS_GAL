@@ -7,6 +7,8 @@ import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Sottomissione;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Valutazione;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.SottomissioneDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Ruolo;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.*;
 
 import java.io.File;
@@ -235,29 +237,32 @@ public class SottomissioneHandler {
      *
      * @param username        l'utente autenticato
      * @param sottomissioneId l'ID della sottomissione da scaricare
-     * @param isGiudice       true se il chiamante ha ruolo GIUDICE
      * @throws Exception se la sottomissione non esiste, il file manca, o l'utente non è autorizzato
      */
-    public String scaricaSottomissione(String username,
-                                       Long sottomissioneId,
-                                       boolean isGiudice) throws Exception {
+    public File scaricaSottomissione(String username,
+                                       Long sottomissioneId) throws Exception {
 
+        // recupero della sottomissione
         Sottomissione sottomissione = sottomissioneRep.findById(sottomissioneId).orElseThrow(
                 () -> new Exception("Errore: Sottomissione non trovata"));
-
+        // recupero del team
         Team team = sottomissione.getTeam();
+        // recupero dell'hackathon
         Hackathon hackathon = team.getHackathon();
 
-        if (isGiudice) {
-            if (hackathon == null || !username.equals(hackathon.getGiudice().getUsername())) {
-                throw new Exception("Errore: Non sei il giudice dell'hackathon di questa sottomissione");
+        // controlli sul richiedente
+        Utente richiedente = utenteRep.findByUsername(username).orElseThrow(
+                () -> new Exception("Errore: richiedente non esistente"));
+
+        if(richiedente.getRuolo().equals(Ruolo.GIUDICE)){
+            if(!hackathon.getGiudice().equals(richiedente)){
+                throw new Exception("Errore: Non sei il giudice dell'hackathon in cui è stata caricata questa sottomissione");
             }
-        } else {
-            // verifica che l'utente appartenga al team della sottomissione
-            boolean isMembro = team.getUtenti().stream()
-                    .anyMatch(u -> u.getUsername().equals(username));
-            if (!isMembro) {
-                throw new Exception("Errore: Non appartieni al team di questa sottomissione");
+        }
+
+        if(richiedente.getRuolo().equals(Ruolo.UTENTE)) {
+            if (!team.getUtenti().contains(richiedente)) {
+                throw new Exception("Errore: Non sei membro del team che ha creato questa sottomissione");
             }
         }
 
@@ -266,7 +271,8 @@ public class SottomissioneHandler {
             throw new Exception("Errore: Nessun file caricato per questa sottomissione");
         }
 
-        return filePath;
+        File fileSottomissione=new File(filePath);
+        return fileSottomissione;
     }
 }
 

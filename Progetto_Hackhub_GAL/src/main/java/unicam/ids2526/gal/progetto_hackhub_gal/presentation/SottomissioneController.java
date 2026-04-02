@@ -1,6 +1,7 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.presentation;
 
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Sottomissione;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.SottomissioneDTO;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 
 @RestController
@@ -101,27 +103,21 @@ public class SottomissioneController {
 
     @PreAuthorize("hasAnyAuthority('UTENTE', 'GIUDICE')")
     @GetMapping("/scarica")
-    public ResponseEntity<Resource> scaricaSottomissione(
-            Authentication authentication,
-            @RequestParam Long sottomissioneId) {
+    public ResponseEntity<Object> scaricaSottomissione( Authentication authentication, @RequestParam Long sottomissioneId) {
         String username = authentication.getName();
-        boolean isGiudice = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("GIUDICE"));
         try {
-            String filePath = sottomissioneHandler.scaricaSottomissione(
-                    username, sottomissioneId, isGiudice);
-            File file = new File(filePath);
-            if (!file.exists()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-            Resource resource = new FileSystemResource(file);
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION,
-                            "attachment; filename=\"" + file.getName() + "\"")
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(resource);
+            File sottomissione = sottomissioneHandler.scaricaSottomissione(username, sottomissioneId);
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(sottomissione));
+
+            HttpHeaders header = new HttpHeaders();
+            header.add("Content-Disposition", String.format("attachment; fileName=\"%s\"", sottomissione.getName()));
+
+            ResponseEntity<Object> response = ResponseEntity.ok().headers(header)
+                    .contentLength(sottomissione.length())
+                    .contentType(MediaType.parseMediaType("application/zip")).body(resource);
+            return response;
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
