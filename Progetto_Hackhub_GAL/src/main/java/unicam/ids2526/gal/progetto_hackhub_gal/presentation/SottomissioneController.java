@@ -101,7 +101,7 @@ public class SottomissioneController {
         }
     }
 
-    @PreAuthorize("hasAnyAuthority('UTENTE', 'GIUDICE')")
+    @PreAuthorize("hasAnyAuthority('UTENTE', 'GIUDICE', 'MENTORE', 'ORGANIZZATORE')")
     @GetMapping("/scarica")
     public ResponseEntity<Object> scaricaSottomissione( Authentication authentication, @RequestParam Long sottomissioneId) {
         String username = authentication.getName();

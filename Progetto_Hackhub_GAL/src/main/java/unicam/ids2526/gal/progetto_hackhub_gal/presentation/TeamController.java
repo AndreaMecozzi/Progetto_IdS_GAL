@@ -35,7 +35,7 @@ public class TeamController {
     public ResponseEntity<Object> visualizzaInfoTeam(Authentication authentication) {
         try {
             String username = authentication.getName();
-            TeamDTO teamDto = teamHandler.visualizzaTeam(username);
+            TeamDTO teamDto = teamHandler.visualizzaInfoTeam(username);
             return new ResponseEntity<>(teamDto, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

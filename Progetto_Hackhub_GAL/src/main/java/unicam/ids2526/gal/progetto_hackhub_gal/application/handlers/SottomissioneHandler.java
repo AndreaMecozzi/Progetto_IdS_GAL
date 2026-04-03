@@ -260,6 +260,18 @@ public class SottomissioneHandler {
             }
         }
 
+        if(richiedente.getRuolo().equals(Ruolo.MENTORE)){
+            if(!hackathon.getMentori().contains(richiedente)){
+                throw new Exception("Errore: Non sei mentore dell'hackathon in cui è stata caricata questa sottomissione");
+            }
+        }
+
+        if(richiedente.getRuolo().equals(Ruolo.ORGANIZZATORE)){
+            if(!hackathon.getOrganizzatore().equals(richiedente)){
+                throw new Exception("Errore: Non sei mentore dell'hackathon in cui è stata caricata questa sottomissione");
+            }
+        }
+
         if(richiedente.getRuolo().equals(Ruolo.UTENTE)) {
             if (!team.getUtenti().contains(richiedente)) {
                 throw new Exception("Errore: Non sei membro del team che ha creato questa sottomissione");

@@ -47,7 +47,7 @@ public class TeamHandler {
      * @throws Exception se il team non esiste o l'utente non è membro del team
      */
 
-    public TeamDTO visualizzaTeam(String username) throws Exception {
+    public TeamDTO visualizzaInfoTeam(String username) throws Exception {
         // Cerchiamo il team a cui appartiene l'utente
         Team team = teamRep.findByUtenti_Username(username)
                 .orElseThrow(() -> new Exception("Errore: Non appartieni a nessun team"));
