@@ -441,4 +441,59 @@ public class HackathonHandler {
             throw new Exception("Errore: il mentore non è assegnato a questo hackathon");
         }
     }
+
+    /**
+     * Restituisce le informazioni dettagliate di un hackathon per un membro dello staff
+     *
+     * @param username    l'username del richiedente (deve essere GIUDICE, MENTORE o ORGANIZZATORE)
+     * @param hackathonId l'id dell'hackathon da visualizzare
+     *
+     * @return l'oggetto HackathonDTO con le informazioni dell'hackathon
+     *
+     * @throws Exception se l'utente non esiste
+     * @throws Exception se l'utente non possiede un ruolo staff valido
+     * @throws Exception se l'hackathon con l'id specificato non esiste
+     */
+    public HackathonDTO visualizzaHackathon(String username, Long hackathonId) throws Exception {
+           // recupero il richiedente
+        Utente richiedente = utenteRep.findByUsername(username).orElseThrow(
+                () -> new Exception("Errore: Utente non trovato"));
+
+        // controllo che il ruolo sia staff
+        Ruolo ruolo = richiedente.getRuolo();
+        if (ruolo != Ruolo.GIUDICE && ruolo != Ruolo.MENTORE && ruolo != Ruolo.ORGANIZZATORE) {
+            throw new Exception("Errore: Non hai i permessi per visualizzare questo hackathon");
+        }
+
+        // recupero l'hackathon tramite id
+        Hackathon hackathon = hackathonRep.findById(hackathonId).orElseThrow(
+                () -> new Exception("Errore: Hackathon non trovato"));
+
+        // costruzione del DTO
+        List<String> nomiTeam = hackathon.getTeamPartecipanti().stream()
+                .map(t -> t.getNome())
+                .toList();
+
+        List<String> nomiMentori = hackathon.getMentori().stream()
+                .map(u -> u.getUsername())
+                .toList();
+
+        List<String> emailMentori = hackathon.getMentori().stream()
+                .map(u -> u.getEmail())
+                .toList();
+
+        return new HackathonDTO(
+                hackathon.getNome(),
+                hackathon.getPremio(),
+                hackathon.getDimenisoneTeam(),
+                hackathon.getDataInizioStato().toString(),
+                hackathon.getStato(),
+                nomiTeam,
+                hackathon.getOrganizzatore().getUsername(),
+                hackathon.getOrganizzatore().getEmail(),
+                hackathon.getGiudice().getEmail(),
+                nomiMentori,
+                emailMentori
+        );
+    }
 }

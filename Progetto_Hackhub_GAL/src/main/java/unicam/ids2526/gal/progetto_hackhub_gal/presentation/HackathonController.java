@@ -153,4 +153,18 @@ public class HackathonController {
         }
     }
 
+
+    @PreAuthorize("hasAnyAuthority('GIUDICE','MENTORE','ORGANIZZATORE')")
+    @GetMapping("/visualizza")
+    public ResponseEntity<Object> visualizzaHackathon(Authentication authentication,
+                                                      @RequestParam Long hackathonId) {
+        String username = authentication.getName();
+        try {
+            HackathonDTO hackathonDTO = hackathonHandler.visualizzaHackathon(username, hackathonId);
+            return new ResponseEntity<>(hackathonDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
