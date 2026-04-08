@@ -65,4 +65,17 @@ public class TeamController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PreAuthorize("hasAnyAuthority('GIUDICE','MENTORE','ORGANIZZATORE')")
+    @GetMapping("/visualizza")
+    public ResponseEntity<Object> visualizzaTeam(Authentication authentication,
+                                                 @RequestParam Long teamId) {
+        String username = authentication.getName();
+        try {
+            TeamDTO teamDTO = teamHandler.visualizzaTeam(username, teamId);
+            return new ResponseEntity<>(teamDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

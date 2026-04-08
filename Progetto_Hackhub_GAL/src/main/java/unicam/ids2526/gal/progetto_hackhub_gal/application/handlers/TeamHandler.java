@@ -117,4 +117,34 @@ public class TeamHandler {
         mioTeam.removeUtente(utente);
         teamRep.save(mioTeam);
     }
+
+    /**
+     * Restituisce le informazioni dettagliate di un team per un membro dello staff
+     *
+     * @param username l'username del richiedente (deve essere GIUDICE, MENTORE o ORGANIZZATORE)
+     * @param teamId   l'id del team da visualizzare
+     *
+     * @return l'oggetto TeamDTO con le informazioni del team
+     *
+     * @throws Exception se l'utente non esiste
+
+     * @throws Exception se il team con l'id specificato non esiste
+     */
+    public TeamDTO visualizzaTeam(String username, Long teamId) throws Exception {
+
+        // recupero il team tramite id
+        Team team = teamRep.findById(teamId).orElseThrow(
+                () -> new Exception("Errore: Il team non esiste"));
+
+            // costruzione del DTO
+        String nomeHackathon = team.getHackathon() != null ? team.getHackathon().getNome() : null;
+
+        return new TeamDTO(
+                team.getTeamId(),
+                team.getNome(),
+                  nomeHackathon,
+                team.getUtenti().stream().map(Utente::getUsername).toList(),
+                team.getUtenti().stream().map(Utente::getEmail).toList()
+        );
+    }
 }
