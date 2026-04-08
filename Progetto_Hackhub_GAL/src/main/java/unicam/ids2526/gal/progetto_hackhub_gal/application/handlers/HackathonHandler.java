@@ -459,12 +459,6 @@ public class HackathonHandler {
         Utente richiedente = utenteRep.findByUsername(username).orElseThrow(
                 () -> new Exception("Errore: Utente non trovato"));
 
-        // controllo che il ruolo sia staff
-        Ruolo ruolo = richiedente.getRuolo();
-        if (ruolo != Ruolo.GIUDICE && ruolo != Ruolo.MENTORE && ruolo != Ruolo.ORGANIZZATORE) {
-            throw new Exception("Errore: Non hai i permessi per visualizzare questo hackathon");
-        }
-
         // recupero l'hackathon tramite id
         Hackathon hackathon = hackathonRep.findById(hackathonId).orElseThrow(
                 () -> new Exception("Errore: Hackathon non trovato"));

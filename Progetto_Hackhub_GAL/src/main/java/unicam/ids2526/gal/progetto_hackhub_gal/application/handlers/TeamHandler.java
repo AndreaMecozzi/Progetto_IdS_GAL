@@ -136,7 +136,7 @@ public class TeamHandler {
         Team team = teamRep.findById(teamId).orElseThrow(
                 () -> new Exception("Errore: Il team non esiste"));
 
-            // costruzione del DTO
+        // costruzione del DTO
         String nomeHackathon = team.getHackathon() != null ? team.getHackathon().getNome() : null;
 
         return new TeamDTO(
