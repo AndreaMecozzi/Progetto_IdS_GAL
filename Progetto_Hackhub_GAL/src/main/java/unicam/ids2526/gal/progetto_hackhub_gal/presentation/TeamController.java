@@ -9,6 +9,8 @@ import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.TeamHandler;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.TeamDTO;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/team")
 public class TeamController {
@@ -78,4 +80,17 @@ public class TeamController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/elenco")
+    public ResponseEntity<Object> elencoTeam() {
+        try {
+            List<TeamDTO> teamDTOs = teamHandler.consultareElencoTeam();
+            return new ResponseEntity<>(teamDTOs, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
+
+

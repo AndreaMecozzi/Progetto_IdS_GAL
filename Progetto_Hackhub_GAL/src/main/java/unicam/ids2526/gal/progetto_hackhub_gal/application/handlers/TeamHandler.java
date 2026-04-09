@@ -8,6 +8,8 @@ import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
 
+import java.util.List;
+
 @Service
 public class TeamHandler {
     private final TeamRepository teamRep;
@@ -147,4 +149,30 @@ public class TeamHandler {
                 team.getUtenti().stream().map(Utente::getEmail).toList()
         );
     }
+
+    /**
+     * Restituisce l'elenco di tutti i team presenti nel sistema
+     *
+     * @return la lista di TeamDTO con le informazioni di tutti i team
+     *
+     *
+     *
+     * @throws Exception se non ci sono team nel sistema
+     */
+    public List<TeamDTO> consultareElencoTeam() throws Exception {
+        List<Team> teams = teamRep.findAll();
+
+        if (teams == null || teams.isEmpty()) {
+            throw new Exception("Errore: Non ci sono team");
+        }
+
+        return teams.stream().map(team -> new TeamDTO(
+                team.getTeamId(),
+                team.getNome(),
+                team.getHackathon() != null ? team.getHackathon().getNome() : null,
+                team.getUtenti().stream().map(Utente::getUsername).toList(),
+                team.getUtenti().stream().map(Utente::getEmail).toList()
+        )).toList();
+    }
+
 }
