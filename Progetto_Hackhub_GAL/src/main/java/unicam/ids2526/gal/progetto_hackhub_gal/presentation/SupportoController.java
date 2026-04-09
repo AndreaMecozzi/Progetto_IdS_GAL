@@ -5,11 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.SupportoHandler;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.supporto.Supporto;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/supporto")
@@ -28,6 +28,18 @@ public class SupportoController {
         try {
             supportoHandler.richiediSupporto(username, richiesta);
             return new ResponseEntity<>("Richiesta di supporto inviata con successo", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('MENTORE')")
+    @GetMapping("/visualizzaRichieste")
+    public ResponseEntity<Object> visualizzaRichieste(Authentication authentication) {
+        String username = authentication.getName();
+        try {
+            List<Supporto> supporti = supportoHandler.visualizzaRichieste(username);
+            return new ResponseEntity<>(supporti, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

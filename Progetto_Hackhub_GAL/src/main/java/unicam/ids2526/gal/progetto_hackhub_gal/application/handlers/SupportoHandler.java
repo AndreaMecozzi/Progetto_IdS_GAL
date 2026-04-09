@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.supporto.Supporto;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Ruolo;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.SupportoRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
@@ -66,4 +67,37 @@ public class SupportoHandler {
         Supporto supporto = new Supporto(richiedente, mentori, richiesta);
         supportoRep.save(supporto);
     }
+
+    /**
+     * Permette a un mentore di visualizzare le richieste di supporto a lui indirizzate
+     * @param username l'username del mentore
+
+     * @return la lista delle richieste di supporto ricevute
+     *
+     *
+     * @throws Exception se l'utente non possiede il ruolo MENTORE
+     * @throws Exception se non ci sono richieste di supporto
+     */
+    public List<Supporto> visualizzaRichieste(String username) throws Exception {
+        //      recupero il richiedente e controllo il ruolo
+        Utente richiedente = utenteRep.findByUsername(username).orElseThrow(
+                () -> new Exception("Errore: Utente non trovato"));
+
+
+        if (richiedente.getRuolo() != Ruolo.MENTORE) {
+            throw new Exception("Errore: Non hai i permessi per visualizzare le richieste di supporto");
+        }
+
+        // recupero le richieste di supporto indirizzate al mentore.
+        List<Supporto> supporti = supportoRep.findByRiceventeContaining(richiedente);
+
+        if (supporti == null || supporti.isEmpty()) {
+            throw new Exception("Errore: Non ci sono richieste di supporto");
+        }
+
+
+
+        return supporti;
+    }
+
 }
