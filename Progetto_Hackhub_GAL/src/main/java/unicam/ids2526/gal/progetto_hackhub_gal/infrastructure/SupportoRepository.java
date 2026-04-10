@@ -8,5 +8,5 @@ import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import java.util.List;
 
 public interface SupportoRepository extends JpaRepository<Supporto, Long> {
-    List<Supporto> findByRiceventeContaining(Utente ricevente);
+    List<Supporto> findByHackathon_HackathonID(Long hackathonID);
 }

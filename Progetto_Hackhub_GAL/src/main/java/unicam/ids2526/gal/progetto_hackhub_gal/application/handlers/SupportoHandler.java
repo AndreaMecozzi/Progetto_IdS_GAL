@@ -3,9 +3,12 @@ package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 import org.springframework.stereotype.Service;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.supporto.Supporto;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.supporto.SupportoDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.team.TeamDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Ruolo;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
+import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.HackathonRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.SupportoRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
@@ -17,12 +20,14 @@ public class SupportoHandler {
     private final SupportoRepository supportoRep;
     private final UtenteRepository utenteRep;
     private final TeamRepository teamRep;
+    private final HackathonRepository hackathonRep;
 
     public SupportoHandler(SupportoRepository supportoRep, UtenteRepository utenteRep,
-                           TeamRepository teamRep) {
+                           TeamRepository teamRep, HackathonRepository hackathonRep) {
         this.supportoRep = supportoRep;
         this.utenteRep = utenteRep;
         this.teamRep = teamRep;
+        this.hackathonRep = hackathonRep;
     }
 
     /**
@@ -35,18 +40,14 @@ public class SupportoHandler {
      * @throws Exception se la richiesta è vuota
      */
     public void richiediSupporto(String username, String richiesta) throws Exception {
-        // recupero il team del richiedente
+        // recupero del team del richiedente
         Team team = teamRep.findByUtenti_Username(username).orElseThrow(
                 () -> new Exception("Errore: Non appartieni a nessun team"));
 
-        List<Utente> membri = team.getUtenti();
         Hackathon hackathon = team.getHackathon();
 
-        //       controllo che il richiedente sia nel team e che il team sia iscritto a un hackathon
-        Utente richiedente = utenteRep.findByUsername(username).orElseThrow(
-                () -> new Exception("Errore: Utente non trovato"));
-
-        if (!membri.contains(richiedente) || hackathon == null) {
+        // controllo se il team sia iscritto a un hackathon
+        if (hackathon == null) {
             throw new Exception("Errore: Impossibile richiedere supporto");
         }
 
@@ -60,11 +61,8 @@ public class SupportoHandler {
             throw new Exception("Errore: Richiesta vuota");
         }
 
-        // recupero i mentori dell'hackathon
-        List<Utente> mentori = hackathon.getMentori();
-
         // creazione e salvataggio della richiesta di supporto
-        Supporto supporto = new Supporto(richiedente, mentori, richiesta);
+        Supporto supporto = new Supporto(team, hackathon, richiesta);
         supportoRep.save(supporto);
     }
 
@@ -78,8 +76,8 @@ public class SupportoHandler {
      * @throws Exception se l'utente non possiede il ruolo MENTORE
      * @throws Exception se non ci sono richieste di supporto
      */
-    public List<Supporto> visualizzaRichieste(String username) throws Exception {
-        //      recupero il richiedente e controllo il ruolo
+    public List<SupportoDTO> visualizzaRichieste(String username) throws Exception {
+        // recupero del richiedente e controllo il ruolo
         Utente richiedente = utenteRep.findByUsername(username).orElseThrow(
                 () -> new Exception("Errore: Utente non trovato"));
 
@@ -88,16 +86,23 @@ public class SupportoHandler {
             throw new Exception("Errore: Non hai i permessi per visualizzare le richieste di supporto");
         }
 
+        // recupero dell'hackathon gestito dal mentore
+        Hackathon hackathon = hackathonRep.findByMentoriContaining(richiedente);
+
         // recupero le richieste di supporto indirizzate al mentore.
-        List<Supporto> supporti = supportoRep.findByRiceventeContaining(richiedente);
+        List<Supporto> supporti = supportoRep.findByHackathon_HackathonID(hackathon.getHackathonID());
 
         if (supporti == null || supporti.isEmpty()) {
             throw new Exception("Errore: Non ci sono richieste di supporto");
         }
 
-
-
-        return supporti;
+        // costruzione Dto
+        return supporti.stream().map(supporto -> new SupportoDTO(
+                supporto.getSupportoID(),
+                supporto.getTeam().getNome(),
+                supporto.getHackathon().getNome(),
+                supporto.getRichiesta()
+        )).toList();
     }
 
 }

@@ -20,4 +20,7 @@ public interface HackathonRepository extends JpaRepository<Hackathon, Long> {
     List<Hackathon> findAllByStatoNot(@Param("stato") String stato);
 
     List<Hackathon> findByOrganizzatore(Utente organizzatore);
+
+    // Restituisce tutti gli hackathon dove il mentore specificato è presente nella lista
+    Hackathon findByMentoriContaining(Utente mentore);
 }

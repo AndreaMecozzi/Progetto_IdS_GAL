@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/utenti/registra").permitAll()
                         .requestMatchers("/hackathon/elenco").permitAll()
                         .requestMatchers("/hackathon/visualizzaRegolamento").permitAll()
+                        .requestMatchers("/team/elenco").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
