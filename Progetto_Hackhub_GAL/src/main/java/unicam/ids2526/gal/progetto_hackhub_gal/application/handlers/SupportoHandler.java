@@ -1,6 +1,7 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.supporto.Supporto;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.supporto.SupportoDTO;
@@ -16,6 +17,7 @@ import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
 import java.util.List;
 
 @Service
+@Transactional
 public class SupportoHandler {
     private final SupportoRepository supportoRep;
     private final UtenteRepository utenteRep;

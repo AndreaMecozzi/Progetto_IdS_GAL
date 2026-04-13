@@ -1,6 +1,7 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Sottomissione;
@@ -19,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class SottomissioneHandler {
-
     private final SottomissioneRepository sottomissioneRep;
     private final TeamRepository teamRep;
     private final HackathonRepository hackathonRep;

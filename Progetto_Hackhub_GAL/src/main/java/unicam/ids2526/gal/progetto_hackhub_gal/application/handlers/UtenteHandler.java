@@ -1,6 +1,7 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.BuilderUtente;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.ConcreteBuilderUtente;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
@@ -9,8 +10,8 @@ import unicam.ids2526.gal.progetto_hackhub_gal.security.JwtUtil;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UtenteHandler {
-
     private final UtenteRepository utenteRep;
     private final BuilderUtente builderUtente;
     private final JwtUtil jwtUtil;

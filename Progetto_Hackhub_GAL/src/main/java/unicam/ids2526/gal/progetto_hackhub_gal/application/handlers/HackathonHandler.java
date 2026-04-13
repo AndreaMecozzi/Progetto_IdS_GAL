@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class HackathonHandler {
     private final HackathonRepository hackathonRep;
     private final UtenteRepository  utenteRep;
@@ -33,7 +34,6 @@ public class HackathonHandler {
         this.utenteRep = utenteRep;
         this.teamRep = teamRep;
     }
-
 
     /**
      * Crea un nuovo hackathon e lo salva nel sistema

@@ -1,12 +1,14 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.EsitoInvito;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.Invito;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.InvitoDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Ruolo;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
+import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.HackathonRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.InvitoRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
@@ -17,6 +19,7 @@ import java.util.List;
  * Implementa la logica di business per le azione che possono essere svolte da un utente
  */
 @Service
+@Transactional
 public class InvitoHandler {
     private final UtenteRepository userRep;
     private final InvitoRepository invitoRep;
@@ -27,6 +30,7 @@ public class InvitoHandler {
         this.invitoRep=invitoRep;
         this.teamRep=teamRep;
     }
+
 
     /**
      * Invita un utente a partire dal suo username

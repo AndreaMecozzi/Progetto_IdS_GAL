@@ -3,29 +3,33 @@ package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.segnalazione.Segnalazione;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.segnalazione.SegnalazioneDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
-import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.HackathonRepository;
-import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.SegnalazioneRepository;
-import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
-import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
+import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.*;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class SegnalazioneHandler {
-
-    @Autowired
     private SegnalazioneRepository segnalazioneRep;
-    @Autowired
     private UtenteRepository userRep;
-    @Autowired
     private TeamRepository teamRep;
-    @Autowired
     private HackathonRepository hackathonRep;
+
+    public SegnalazioneHandler(SegnalazioneRepository segnalazioneRep,
+                               UtenteRepository userRep,
+                               TeamRepository teamRep,
+                               HackathonRepository hackathonRep) {
+        this.segnalazioneRep = segnalazioneRep;
+        this.userRep = userRep;
+        this.teamRep = teamRep;
+        this.hackathonRep = hackathonRep;
+    }
 
     public void segnalaTeam(String username, String nomeTeam, String motivazione) throws Exception{
         // recupera del team da segnalare
