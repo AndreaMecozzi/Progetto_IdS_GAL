@@ -50,7 +50,11 @@ public class Hackathon {
     @JoinColumn(name="giudice_id", nullable = false)
     private Utente giudice;
 
-    @OneToMany(mappedBy = "hackathon", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(
+            mappedBy = "hackathon",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            fetch = FetchType.EAGER
+    )
     private List<Team> teamPartecipanti;
 
     // Costruttore di default richiesto da JPA
@@ -151,5 +155,13 @@ public class Hackathon {
         if (team != null) {
             this.teamPartecipanti.remove(team);
         }
+    }
+
+    public boolean sottomissioniValutate() {
+        return this.teamPartecipanti.stream()
+                // si filtrano solo i team che hanno effettivamente caricato una sottomissione
+                .filter(team -> team.getSottomissione() != null)
+                // si verifica che tutte queste sottomissioni abbiano una valutazione non nulla
+                .allMatch(team -> team.getSottomissione().getValutazione() != null);
     }
 }

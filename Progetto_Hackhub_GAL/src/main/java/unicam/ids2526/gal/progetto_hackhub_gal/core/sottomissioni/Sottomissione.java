@@ -20,10 +20,10 @@ public class Sottomissione {
     @JoinColumn(name = "file", referencedColumnName = "id")
     private String file;
     @JsonIgnore
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "valutazione_id")
     private Valutazione valutazione;
 

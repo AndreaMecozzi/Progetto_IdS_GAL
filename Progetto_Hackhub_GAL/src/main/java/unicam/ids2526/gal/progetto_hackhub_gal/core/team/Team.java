@@ -28,7 +28,7 @@ public class Team {
     @JoinColumn(name="hackathon_id")
     private Hackathon hackathon;
     @JsonIgnore
-    @OneToOne
+    @OneToOne(mappedBy = "team")
     @JoinColumn(name="sottomissione_id")
     private Sottomissione sottomissione;
 

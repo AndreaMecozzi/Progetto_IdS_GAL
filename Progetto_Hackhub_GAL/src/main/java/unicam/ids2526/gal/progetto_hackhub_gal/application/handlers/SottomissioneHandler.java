@@ -190,6 +190,7 @@ public class SottomissioneHandler {
         return sottomissioniDTO;
     }
 
+    @Transactional
     public void valutaSottomissione(String username,
                                     String nomeTeam,
                                     int voto,
