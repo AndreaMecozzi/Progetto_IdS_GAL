@@ -10,17 +10,13 @@ public class InValutazione implements StatoHackathon{
 
     @Override
     public void cambiaStato(Hackathon hackathon){
-        /// Durata effettiva 14 giorni, ma commentato per testare
-        /**if(LocalDateTime.now().isAfter(hackathon.getDataInizioStato().plusDays(14))){
-            StatoHackathon concluso=new Concluso();
+        // controllo se tutte le sottomissioni presentate per questo hackathon sono state valutate
+        if (hackathon.sottomissioniValutate()) {
+            StatoHackathon concluso = new Concluso();
             hackathon.setStato(concluso);
+            // impostato il momento esatto della fine
             hackathon.setDataInizioStato(LocalDateTime.now());
-        }*/
-
-            StatoHackathon concluso=new Concluso();
-            hackathon.setStato(concluso);
-
-
+        }
     }
 
     @Override

@@ -19,18 +19,6 @@ public class HackathonScheduler {
         this.hackathonRep = hackathonRep;
     }
 
-    /*
-    // Costanti con i giorni convertiti esattamente in secondi
-    private static final long SECONDI_IN_7_GIORNI = 604800L;
-    private static final long SECONDI_IN_30_GIORNI = 2592000L;
-
-     */
-
-    // Costanti con i giorni convertiti in secondi (semplificati per i test)
-    // passaggio da "IN_ISCRIZIONE" a "IN_CORSO" -> 3 minuti
-    private static final long SECONDI_IN_7_GIORNI = 120;
-    // passaggio da "IN_CORSO" a "IN_VALUTAZIONE" -> 5 minuti
-    private static final long SECONDI_IN_30_GIORNI = 120;
 
     //@Scheduled(cron = "* * * * * *") // --> scatta ogni secondo per una precisione maggiore
     @Scheduled(cron = "0 * * * * *") //--> Scatta ogni minuto, per il testing
@@ -39,40 +27,15 @@ public class HackathonScheduler {
         List<Hackathon> attivi = hackathonRep.findAllByStatoNot("CONCLUSO");
 
         for (Hackathon h : attivi) {
-            String statoAttuale = h.getStato();
-            boolean prontoPerAvanzare = false;
+            // recupero dello stato
+            String statoPrecedente = h.getStato();
 
-            // calcolo dei secondi reali trascorsi dall'inizio dello stato attuale
-            long secondiTrascorsi = ChronoUnit.SECONDS.between(h.getDataInizioStato(), LocalDateTime.now());
+            // cambiamento dello stato dell'hackathon
+            h.cambiaStato();
 
-            switch (statoAttuale) {
-                case "IN_ISCRIZIONE":
-                    if (secondiTrascorsi >= SECONDI_IN_7_GIORNI) {
-                        prontoPerAvanzare = true;
-                    }
-                    break;
-
-                case "IN_CORSO":
-                    if (secondiTrascorsi >= SECONDI_IN_30_GIORNI) {
-                        prontoPerAvanzare = true;
-                    }
-                    break;
-
-                case "IN_VALUTAZIONE":
-                    // Il tempo non conta, si aspetta solo il Giudice
-                    System.out.println(h.sottomissioniValutate());
-                    if (h.sottomissioniValutate()) {
-                        prontoPerAvanzare = true;
-                    }
-                    break;
-            }
-
-            if (prontoPerAvanzare) {
-                h.cambiaStato();
-                h.setDataInizioStato(LocalDateTime.now()); // Resetta il timer
+            // salvataggio dello stato solo in caso di effettivo cambiamento
+            if (!statoPrecedente.equals(h.getStato())) {
                 hackathonRep.save(h);
-
-                System.out.println("L'Hackathon '" + h.getNome() + "' è avanzato allo stato: " + h.getStato());
             }
         }
     }
