@@ -91,6 +91,18 @@ public class TeamController {
         }
     }
 
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
+    @PostMapping("/rimuovi")
+    public ResponseEntity<Object> rimuoviHackathon(Authentication authentication,@RequestBody String nomeTeam){
+        String username=authentication.getName();
+        try{
+            teamHandler.rimuoviTeam(username, nomeTeam);
+            return new ResponseEntity<>("Team rimosso con successo",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
 
 

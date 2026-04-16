@@ -6,6 +6,8 @@ import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.TeamDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
+import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.HackathonRepository;
+import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.SegnalazioneRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
 
@@ -16,10 +18,14 @@ import java.util.List;
 public class TeamHandler {
     private final TeamRepository teamRep;
     private final UtenteRepository utenteRep;
+    private final SegnalazioneRepository segnalazioneRep;
+    private final HackathonRepository hackathonRep;
 
-    public TeamHandler(TeamRepository teamRepository, UtenteRepository utenteRep) {
+    public TeamHandler(TeamRepository teamRepository, UtenteRepository utenteRep, SegnalazioneRepository segnalazioneRep, HackathonRepository hackathonRep) {
         this.teamRep = teamRepository;
         this.utenteRep = utenteRep;
+        this.segnalazioneRep = segnalazioneRep;
+        this.hackathonRep = hackathonRep;
     }
 
     /**
@@ -176,5 +182,30 @@ public class TeamHandler {
                 team.getUtenti().stream().map(Utente::getEmail).toList()
         )).toList();
     }
+
+    @Transactional
+    public void rimuoviTeam(String username, String nomeTeam) throws Exception{
+        // recupero il team dal nome
+        Team team = teamRep.findByNome(nomeTeam).orElseThrow(
+                ()->new Exception("Errore: Team non esistente"));
+
+        Hackathon hackathon = team.getHackathon();
+
+        // controllo sull'organizzatore
+        if(!username.equals(hackathon.getOrganizzatore().getUsername())){
+            throw new Exception("Errore: L'hackathon specificato non è organizzato da te");
+        }
+        // controllo della segnalazione al Team
+        if(segnalazioneRep.findByTeam(team).isEmpty()){
+            throw new Exception("Errore: il Team non e' stato segnalato");
+        }
+
+        // rimozione del team dall'hackathon
+        team.setHackathon(null);
+        hackathon.getTeamPartecipanti().remove(team);
+        teamRep.save(team);
+        hackathonRep.save(hackathon);
+    }
+
 
 }
