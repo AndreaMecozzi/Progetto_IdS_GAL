@@ -159,6 +159,15 @@ public class SottomissioneHandler {
                 () -> new Exception("Errore: la sottomissione non esiste"));
     }
 
+    /**
+     * Restituisce la lista delle sottomissioni effettuate dai team partecipanti
+     * a un determinato hackathon, includendo eventuali valutazioni associate
+     *
+     * @param username l'username dell'utente che richiede di visualizzare le sottomissioni
+     * @param nomeHackathon il nome dell'hackathon di cui si vogliono visualizzare le sottomissioni
+     * @return una lista di SottomissioneDTO contenente le informazioni delle sottomissioni
+     * @throws Exception se l'hackathon non esiste oppure non sono presenti sottomissioni caricate
+     */
     public List<SottomissioneDTO> visualizzaSottomissioni(String username,
                                                           String nomeHackathon) throws Exception {
         Hackathon hackathon=hackathonRep.findByNome(nomeHackathon).orElseThrow(
@@ -190,6 +199,20 @@ public class SottomissioneHandler {
         return sottomissioniDTO;
     }
 
+
+    /**
+     * Permette al giudice di valutare la sottomissione di un team partecipante
+     * a un hackathon, assegnando un voto e una descrizione
+     *
+     * @param username l'username del giudice che effettua la valutazione
+     * @param nomeTeam il nome del team la cui sottomissione deve essere valutata
+     * @param voto il voto assegnato alla sottomissione (compreso tra 0 e 10)
+     * @param descrizione la descrizione della valutazione fornita dal giudice
+     * @throws Exception se il voto o la descrizione non sono validi, il team non esiste,
+     *                   non è associato ad alcun hackathon, l'utente non è il giudice
+     *                   dell'hackathon, la sottomissione non esiste oppure
+     *                   l'hackathon non è nello stato di valutazione
+     */
     @Transactional
     public void valutaSottomissione(String username,
                                     String nomeTeam,

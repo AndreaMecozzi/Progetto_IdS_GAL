@@ -31,6 +31,18 @@ public class SegnalazioneHandler {
         this.hackathonRep = hackathonRep;
     }
 
+    /**
+     * Permette a un mentore di segnalare un team partecipante a un hackathon,
+     * specificando una motivazione per la segnalazione
+     *
+     * @param username l'username del mentore che effettua la segnalazione
+     * @param nomeTeam il nome del team da segnalare
+     * @param motivazione la motivazione della segnalazione inserita dal mentore
+     * @throws Exception se il team non esiste, non partecipa ad alcun hackathon,
+     *                   l'utente non è un mentore dell'hackathon, l'hackathon è concluso,
+     *                   il team non ha effettuato una sottomissione valida oppure
+     *                   la motivazione è vuota
+     */
     public void segnalaTeam(String username, String nomeTeam, String motivazione) throws Exception{
         // recupera del team da segnalare
         Team team = teamRep.findByNome(nomeTeam)
@@ -71,6 +83,14 @@ public class SegnalazioneHandler {
     }
 
 
+    /**
+     * Restituisce la lista delle segnalazioni relative agli hackathon gestiti
+     * da un determinato organizzatore
+     *
+     * @param username l'username dell'organizzatore che richiede di visualizzare le segnalazioni
+     * @return una lista di SegnalazioneDTO contenente le informazioni delle segnalazioni
+     * @throws Exception se l'organizzatore non esiste oppure non gestisce alcun hackathon
+     */
     public List<SegnalazioneDTO> visualizzaSegnalazioni(String username) throws Exception {
         Utente organizzatore = userRep.findByUsername(username)
                 .orElseThrow(() -> new Exception("Errore: l'organizzatore non esiste"));

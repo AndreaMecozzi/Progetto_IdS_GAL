@@ -183,6 +183,16 @@ public class TeamHandler {
         )).toList();
     }
 
+
+    /**
+     * Permette all'organizzatore di rimuovere un team da un hackathon,
+     * a seguito di una segnalazione effettuata sul team stesso
+     *
+     * @param username l'username dell'organizzatore che effettua la rimozione
+     * @param nomeTeam il nome del team da rimuovere dall'hackathon
+     * @throws Exception se il team non esiste, l'utente non è l'organizzatore
+     *                   dell'hackathon, oppure il team non è stato segnalato
+     */
     @Transactional
     public void rimuoviTeam(String username, String nomeTeam) throws Exception{
         // recupero il team dal nome
