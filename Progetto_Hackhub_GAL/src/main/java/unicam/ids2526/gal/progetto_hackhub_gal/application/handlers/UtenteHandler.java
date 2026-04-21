@@ -9,6 +9,12 @@ import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
 import unicam.ids2526.gal.progetto_hackhub_gal.security.JwtUtil;
 import java.util.Optional;
 
+/**
+ * Gestisce la logica applicativa relativa agli utenti
+ *
+ * Coordina le operazioni di creazione, gestione e autenticazione degli utenti,
+ * utilizzando il pattern Builder per la costruzione degli oggetti utente e JWT per l’autenticazione
+ */
 @Service
 @Transactional
 public class UtenteHandler {
@@ -16,6 +22,13 @@ public class UtenteHandler {
     private final BuilderUtente builderUtente;
     private final JwtUtil jwtUtil;
 
+
+    /**
+     * Inizializza il servizio con i componenti necessari
+     *
+     * @param utenteRep repository per l’accesso ai dati degli utenti
+     * @param jwtUtil   utility per la generazione e validazione dei token JWT
+     */
     public UtenteHandler(UtenteRepository utenteRep, JwtUtil jwtUtil) {
         this.utenteRep = utenteRep;
         this.jwtUtil = jwtUtil;

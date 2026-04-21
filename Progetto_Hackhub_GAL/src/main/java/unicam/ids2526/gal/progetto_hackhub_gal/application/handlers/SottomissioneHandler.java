@@ -19,6 +19,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Gestisce la logica applicativa relativa alle sottomissioni dei team
+ *
+ * Coordina le operazioni tra i repository di sottomissioni, team, hackathon,
+ * utenti e valutazioni, garantendo la coerenza dei dati tramite gestione transazionale
+ */
 @Service
 @Transactional
 public class SottomissioneHandler {
@@ -28,6 +34,15 @@ public class SottomissioneHandler {
     private final UtenteRepository utenteRep;
     private final ValutazioneRepository valutazioneRep;
 
+    /**
+     * Inizializza il servizio con i repository necessari
+     *
+     * @param sottomissioneRep repository per l'accesso ai dati delle sottomissioni
+     * @param teamRep          repository per l'accesso ai dati dei team
+     * @param hackathonRep     repository per l'accesso ai dati degli hackathon
+     * @param utenteRep        repository per l'accesso ai dati degli utenti
+     * @param valutazioneRep   repository per l'accesso ai dati delle valutazioni
+     */
     public SottomissioneHandler(SottomissioneRepository sottomissioneRep,
                                 TeamRepository teamRep,
                                 HackathonRepository hackathonRep,

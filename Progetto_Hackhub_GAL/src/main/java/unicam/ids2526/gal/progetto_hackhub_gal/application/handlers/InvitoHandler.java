@@ -16,7 +16,10 @@ import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
 import java.util.List;
 
 /**
- * Implementa la logica di business per le azione che possono essere svolte da un utente
+ * Gestisce la logica applicativa relativa agli inviti tra utenti e team
+ *
+ * Coordina le operazioni tra i repository di utenti, inviti e team,
+ * garantendo la coerenza dei dati tramite gestione transazionale
  */
 @Service
 @Transactional
@@ -25,6 +28,13 @@ public class InvitoHandler {
     private final InvitoRepository invitoRep;
     private final TeamRepository teamRep;
 
+    /**
+     * Inizializza il servizio con i repository necessari
+     *
+     * @param userRep   repository per l'accesso ai dati degli utenti
+     * @param invitoRep repository per l'accesso ai dati degli inviti
+     * @param teamRep   repository per l'accesso ai dati dei team
+     */
     public InvitoHandler(UtenteRepository userRep, InvitoRepository invitoRep, TeamRepository teamRep) {
         this.userRep=userRep;
         this.invitoRep=invitoRep;

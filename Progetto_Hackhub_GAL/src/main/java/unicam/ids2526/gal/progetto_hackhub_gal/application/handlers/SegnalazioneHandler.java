@@ -13,6 +13,12 @@ import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.*;
 
 import java.util.List;
 
+/**
+ * Gestisce la logica applicativa relativa alle segnalazioni
+ *
+ * Coordina le operazioni tra i repository di segnalazioni, utenti, team e hackathon,
+ * garantendo la coerenza dei dati tramite gestione transazionale
+ */
 @Service
 @Transactional
 public class SegnalazioneHandler {
@@ -21,6 +27,14 @@ public class SegnalazioneHandler {
     private TeamRepository teamRep;
     private HackathonRepository hackathonRep;
 
+    /**
+     * Inizializza il servizio con i repository necessari
+     *
+     * @param segnalazioneRep repository per l'accesso ai dati delle segnalazioni
+     * @param userRep         repository per l'accesso ai dati degli utenti
+     * @param teamRep         repository per l'accesso ai dati dei team
+     * @param hackathonRep    repository per l'accesso ai dati degli hackathon
+     */
     public SegnalazioneHandler(SegnalazioneRepository segnalazioneRep,
                                UtenteRepository userRep,
                                TeamRepository teamRep,

@@ -16,6 +16,12 @@ import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
 
 import java.util.List;
 
+/**
+ * Gestisce la logica applicativa relativa alle richieste di supporto
+ *
+ * Coordina le operazioni tra i repository di supporto, utenti, team e hackathon,
+ * garantendo la coerenza dei dati tramite gestione transazionale
+ */
 @Service
 @Transactional
 public class SupportoHandler {
@@ -24,6 +30,14 @@ public class SupportoHandler {
     private final TeamRepository teamRep;
     private final HackathonRepository hackathonRep;
 
+    /**
+     * Inizializza il servizio con i repository necessari
+     *
+     * @param supportoRep  repository per l'accesso ai dati delle richieste di supporto
+     * @param utenteRep    repository per l'accesso ai dati degli utenti
+     * @param teamRep      repository per l'accesso ai dati dei team
+     * @param hackathonRep repository per l'accesso ai dati degli hackathon
+     */
     public SupportoHandler(SupportoRepository supportoRep, UtenteRepository utenteRep,
                            TeamRepository teamRep, HackathonRepository hackathonRep) {
         this.supportoRep = supportoRep;

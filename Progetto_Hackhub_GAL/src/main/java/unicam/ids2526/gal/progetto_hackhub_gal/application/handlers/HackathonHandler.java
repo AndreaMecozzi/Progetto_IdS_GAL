@@ -21,6 +21,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Gestisce la logica applicativa relativa agli hackathon
+ *
+ * Coordina le operazioni tra i repository di hackathon , utenti e team
+ * garantendo la conoscienza dei dati tramite gestione trasazionale.
+ */
 @Service
 @Transactional
 public class HackathonHandler {
@@ -28,6 +34,13 @@ public class HackathonHandler {
     private final UtenteRepository  utenteRep;
     private final TeamRepository teamRep;
 
+    /**
+     * Inizializza il servizio con i repository necessari
+     *
+     * @param hackathonRep repository per l'accesso ai dati degli hackathon
+     * @param utenteRep    repository per l'accesso ai dati degli utenti
+     * @param teamRep      repository per l'accesso ai dati dei team
+     */
     public HackathonHandler(HackathonRepository hackathonRep, UtenteRepository utenteRep,
                             TeamRepository teamRep) {
         this.hackathonRep = hackathonRep;
