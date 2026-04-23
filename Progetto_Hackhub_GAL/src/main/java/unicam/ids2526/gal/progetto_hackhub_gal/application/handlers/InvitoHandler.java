@@ -139,7 +139,7 @@ public class InvitoHandler {
             Utente ricevente = invito.getRicevente();
 
             // Aggiungo l'utente alla lista dei membri del team
-            t.getUtenti().add(ricevente);
+            t.addUtente(ricevente);
 
             teamRep.save(t);
 

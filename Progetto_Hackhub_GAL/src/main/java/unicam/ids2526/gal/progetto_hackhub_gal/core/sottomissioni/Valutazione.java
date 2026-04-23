@@ -25,10 +25,6 @@ public class Valutazione {
         return valutazioneId;
     }
 
-    public void setValutazioneId(Long valutazioneId) {
-        this.valutazioneId = valutazioneId;
-    }
-
     public int getVoto() {
         return voto;
     }

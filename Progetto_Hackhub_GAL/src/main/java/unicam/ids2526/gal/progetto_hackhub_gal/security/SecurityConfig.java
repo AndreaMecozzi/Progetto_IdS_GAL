@@ -22,7 +22,6 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
 
-    // NON INIETTIAMO PIÙ IL UserDetailsService, CI PENSA SPRING IN AUTOMATICO!
     public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
     }

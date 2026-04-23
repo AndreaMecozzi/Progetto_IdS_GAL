@@ -54,7 +54,6 @@ public class Segnalazione {
     public Utente getMittente() { return mittente; }
     public Team getTeam() { return team; }
     public String getMotivazione() { return motivazione; }
-    public void setMotivazione(String motivazione) { this.motivazione = motivazione; }
     public Hackathon getHackathon() { return hackathon; }
 
 

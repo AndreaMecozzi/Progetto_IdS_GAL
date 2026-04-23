@@ -129,8 +129,6 @@ public class HackathonHandler {
 
         Hackathon hackathon=new Hackathon(nomeHackathon, premio, dimensioneTeam, regolamentoFile.getPath(),
                 organizzatore, giudice, mentori);
-        StatoHackathon stato=new InIscrizione();
-        hackathon.setStato(stato);
         hackathonRep.save(hackathon);
     }
 

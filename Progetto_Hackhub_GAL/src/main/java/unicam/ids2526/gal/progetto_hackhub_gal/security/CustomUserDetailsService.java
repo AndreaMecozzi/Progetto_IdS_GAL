@@ -13,10 +13,10 @@ import java.util.Collections;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UtenteRepository utenteRepository;
+    private final UtenteRepository utenteRep;
 
-    public CustomUserDetailsService(UtenteRepository utenteRepository) {
-        this.utenteRepository = utenteRepository;
+    public CustomUserDetailsService(UtenteRepository utenteRep) {
+        this.utenteRep = utenteRep;
     }
 
     /**
@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         //viene cercato l'utente nel db tramite la repository
-        Utente utente = utenteRepository.findByUsername(username)
+        Utente utente = utenteRep.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Attenzione: Utente '" + username + "' non trovato nel database"));
 
         String ruoloSpring = "ROLE_" + utente.getRuolo().name();

@@ -29,7 +29,6 @@ public class Team {
     private Hackathon hackathon;
     @JsonIgnore
     @OneToOne(mappedBy = "team")
-    @JoinColumn(name="sottomissione_id")
     private Sottomissione sottomissione;
 
     public Team() {}
@@ -46,17 +45,11 @@ public class Team {
         return teamId;
     }
 
-    public void setTeamId(Long teamId) {
-        this.teamId = teamId;
-    }
-
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public void setNome(String nome) { this.nome = nome; }
 
     public Hackathon getHackathon() {
         return hackathon;

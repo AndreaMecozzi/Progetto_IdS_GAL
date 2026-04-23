@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 
+import java.io.File;
+
 @Entity
 public class Sottomissione {
     @Id
@@ -16,12 +18,11 @@ public class Sottomissione {
     /** cascade = CascadeType.ALL serve a salvare/cancellare il file
      * automaticamente insieme alla sottomissione.
      */
-    //@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "file", referencedColumnName = "id")
+    @Column(name = "file")
     private String file;
     @JsonIgnore
     @OneToOne
-    @JoinColumn(name = "team_id", nullable = false)
+    @JoinColumn(name = "team_id", nullable = false, unique = true)
     private Team team;
     @OneToOne
     @JoinColumn(name = "valutazione_id")
@@ -41,11 +42,7 @@ public class Sottomissione {
     // Getter & Setter
     public long getSottomissioneID() { return sottomissioneID; }
 
-    public void setSottomissioneID(long sottomissioneID) { this.sottomissioneID = sottomissioneID; }
-
     public String getNome() { return nome; }
-
-    public void setNome(String nome) { this.nome = nome; }
 
     public String getFile() { return file; }
 
@@ -55,15 +52,22 @@ public class Sottomissione {
         return team;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
     public Valutazione getValutazione() {
         return valutazione;
     }
 
     public void setValutazione(Valutazione voto) {
         this.valutazione = voto;
+    }
+
+    @PreRemove
+    private void eliminaFileFisico() {
+        if (this.file != null && !this.file.isEmpty()) {
+            File fileDaEliminare = new File(this.file);
+
+            if (fileDaEliminare.exists()) {
+                fileDaEliminare.delete();
+            }
+        }
     }
 }

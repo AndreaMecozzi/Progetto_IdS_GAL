@@ -72,14 +72,13 @@ public class Hackathon {
         this.giudice = giudice;
         this.mentori = mentore;
         this.teamPartecipanti = new ArrayList<Team>();
+        this.stato = new InIscrizione();
+        this.dataInizioStato = LocalDateTime.now();
     }
 
     // Getter e Setter
     public Long getHackathonID() {
         return hackathonID;
-    }
-    public void setHackathonID(Long hackathonID) {
-        this.hackathonID = hackathonID;
     }
 
     public String getNome() {
@@ -92,28 +91,21 @@ public class Hackathon {
     public String getStato() {
         return stato.getNomeStato();
     }
+    void setStato(StatoHackathon stato) {this.stato = stato;}
+
     public void cambiaStato() {this.stato.cambiaStato(this);}
-    public void setStato(StatoHackathon stato) { this.stato=stato;}
 
     public LocalDateTime getDataInizioStato() {
         return dataInizioStato;
     }
-    public void setDataInizioStato(LocalDateTime dataInizioStato) {
-        this.dataInizioStato = dataInizioStato;
-    }
+    void setDataInizioStato(LocalDateTime dataInizioStato) { this.dataInizioStato= dataInizioStato; }
 
     public Double getPremio() {
         return premio;
     }
-    public void setPremio(Double premio) {
-        this.premio = premio;
-    }
 
     public int getDimenisoneTeam() {
         return dimenisoneTeam;
-    }
-    public void setDimenisoneTeam(int dimenisoneTeam) {
-        this.dimenisoneTeam = dimenisoneTeam;
     }
 
     public String getRegolamento(){return regolamento;}
@@ -122,35 +114,18 @@ public class Hackathon {
     public Utente getOrganizzatore() {
         return organizzatore;
     }
-    public void setOrganizzatore(Utente organizzatore) {
-        this.organizzatore = organizzatore;
-    }
 
     public List<Utente> getMentori() {
         return mentori;
     }
-    public void setMentore(List<Utente> mentore) {
-        this.mentori = mentore;
-    }
     public void addMentore(Utente mentore) { this.mentori.add(mentore);}
     public void removeMentore(Utente mentore) {this.mentori.remove(mentore);}
 
-    public Utente getGiudice() {
-        return giudice;
-    }
-    public void setGiudice(Utente giudice) {
-        this.giudice = giudice;
-    }
+    public Utente getGiudice() { return giudice; }
 
-    public List<Team> getTeamPartecipanti() {
-        return teamPartecipanti;
-    }
-    public void setTeamPartecipanti(List<Team> teamPartecipanti) {
-        this.teamPartecipanti = teamPartecipanti;
-    }
-    public void addTeam(Team team) {
-        this.teamPartecipanti.add(team);
-    }
+    public List<Team> getTeamPartecipanti() { return teamPartecipanti; }
+
+    public void addTeam(Team team) { this.teamPartecipanti.add(team); }
     public void removeTeam(Team team) {
         if (team != null) {
             this.teamPartecipanti.remove(team);

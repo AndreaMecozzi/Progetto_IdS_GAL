@@ -31,14 +31,10 @@ public class Supporto {
     }
 
     public Long getSupportoID() { return supportoID; }
-    public void setSupportoID(Long supportoID) { this.supportoID = supportoID; }
 
     public Team getTeam() { return team; }
-    public void setTeam(Team team) { this.team = team; }
 
     public Hackathon getHackathon() { return hackathon; }
-    public void setHackathon(Hackathon hackathon) { this.hackathon = hackathon; }
 
     public String getRichiesta() { return richiesta; }
-    public void setRichiesta(String richiesta) { this.richiesta = richiesta; }
 }
