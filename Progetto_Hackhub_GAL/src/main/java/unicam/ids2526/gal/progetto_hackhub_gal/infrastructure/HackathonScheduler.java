@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Concluso;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 
 import java.time.LocalDateTime;
@@ -24,7 +25,7 @@ public class HackathonScheduler {
     @Scheduled(cron = "0 * * * * *") //--> Scatta ogni minuto, per il testing
     @Transactional
     public void controllaScadenze(){
-        List<Hackathon> attivi = hackathonRep.findAllByStatoNot("CONCLUSO");
+        List<Hackathon> attivi = hackathonRep.findByStatoNot(new Concluso());
 
         for (Hackathon h : attivi) {
             // recupero dello stato

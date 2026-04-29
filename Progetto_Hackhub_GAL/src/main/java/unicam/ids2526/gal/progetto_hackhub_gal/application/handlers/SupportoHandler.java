@@ -103,7 +103,8 @@ public class SupportoHandler {
         }
 
         // recupero dell'hackathon gestito dal mentore
-        Hackathon hackathon = hackathonRep.findByMentoriContaining(richiedente);
+        Hackathon hackathon = hackathonRep.findByMentoriContaining(richiedente).orElseThrow(
+                () -> new Exception("Errore: Hackathon non trovato"));
 
         // recupero le richieste di supporto indirizzate al mentore.
         List<Supporto> supporti = supportoRep.findByHackathon_HackathonID(hackathon.getHackathonID());

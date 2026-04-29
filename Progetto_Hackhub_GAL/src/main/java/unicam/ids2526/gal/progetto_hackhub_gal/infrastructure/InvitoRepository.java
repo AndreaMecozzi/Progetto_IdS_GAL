@@ -7,7 +7,7 @@ import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 import java.util.List;
 
 public interface InvitoRepository extends JpaRepository<Invito, Long> {
-//query corrispondente = SELECT * FROM invito WHERE ricevente = ?
+
     List <Invito> findByRicevente (Utente ricevente);
 
     boolean existsByMittenteAndRicevente(Utente mittente, Utente ricevente);

@@ -122,6 +122,7 @@ public class Hackathon {
     public void removeMentore(Utente mentore) {this.mentori.remove(mentore);}
 
     public Utente getGiudice() { return giudice; }
+    void setGiudice(Utente giudice) { this.giudice= giudice; }
 
     public List<Team> getTeamPartecipanti() { return teamPartecipanti; }
 

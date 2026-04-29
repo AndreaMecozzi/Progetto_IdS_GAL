@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.StatoHackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
 
 import java.util.List;
@@ -16,11 +17,10 @@ public interface HackathonRepository extends JpaRepository<Hackathon, Long> {
     List<Hackathon> findAll();
     void deleteByNome(String nome);
 
-    @Query(value = "SELECT * FROM hackathon WHERE stato <> :stato", nativeQuery = true)
-    List<Hackathon> findAllByStatoNot(@Param("stato") String stato);
+    List<Hackathon> findByStatoNot(StatoHackathon stato);
 
     List<Hackathon> findByOrganizzatore(Utente organizzatore);
 
     // Restituisce tutti gli hackathon dove il mentore specificato è presente nella lista
-    Hackathon findByMentoriContaining(Utente mentore);
+    Optional<Hackathon> findByMentoriContaining(Utente mentore);
 }

@@ -28,7 +28,7 @@ public class HackathonController {
 
     @PreAuthorize("hasAuthority('ORGANIZZATORE')")
     @PostMapping(value = "/crea",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> creaHackathon(Authentication authentication,
+    public ResponseEntity<Object> creaHackathon(Authentication authentication,
                                                 @ModelAttribute CreaHackathonDTO creaDTO){
         String nomeHackhathon = creaDTO.getNomeHackathon();
         Double premio = creaDTO.getPremio();

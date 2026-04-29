@@ -42,7 +42,6 @@ public class InvitoController {
             if (invitiDTOs == null || invitiDTOs.isEmpty()) {
                 return new ResponseEntity<>("Non ci sono inviti", HttpStatus.OK);
             }
-
             return new ResponseEntity<>(invitiDTOs, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -50,7 +49,7 @@ public class InvitoController {
     }
 
     @PreAuthorize("hasAuthority('UTENTE')")
-    @PostMapping("/gestisci/{idInvito}")
+    @PostMapping("/gestisci/{invitoId}")
     public ResponseEntity<Object> gestisciInvito(Authentication authentication, @PathVariable Long invitoId, @RequestParam boolean esito) {
 
         String username = authentication.getName();

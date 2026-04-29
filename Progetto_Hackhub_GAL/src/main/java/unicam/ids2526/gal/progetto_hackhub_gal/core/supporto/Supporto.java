@@ -37,4 +37,5 @@ public class Supporto {
     public Hackathon getHackathon() { return hackathon; }
 
     public String getRichiesta() { return richiesta; }
+    public void setRichiesta(String richiesta) { this.richiesta=richiesta; }
 }

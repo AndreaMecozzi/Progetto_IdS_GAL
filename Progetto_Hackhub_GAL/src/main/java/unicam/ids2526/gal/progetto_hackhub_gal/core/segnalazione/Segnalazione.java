@@ -51,10 +51,18 @@ public class Segnalazione {
 
 
     public Long getSegnalazioneID() { return segnalazioneID; }
+
     public Utente getMittente() { return mittente; }
+
     public Team getTeam() { return team; }
+    public void setTeam(Team team) { this.team=team; }
+
     public String getMotivazione() { return motivazione; }
+    public void setMotivazione(String motivazione) { this.motivazione=motivazione; }
+
     public Hackathon getHackathon() { return hackathon; }
+    public void setHackathon(Hackathon hackathon) { this.hackathon=hackathon; }
+
 
 
 }

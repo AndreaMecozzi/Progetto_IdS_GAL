@@ -2,6 +2,7 @@ package unicam.ids2526.gal.progetto_hackhub_gal.application.handlers;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.EsitoInvito;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.Invito;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.inviti.InvitoDTO;
@@ -53,28 +54,37 @@ public class InvitoHandler {
     public void invitaUtente(String userMittente, String userRicevente) throws Exception{
 
         if(userMittente.equals(userRicevente)){
-            throw new Exception("Errore: Impossibile invitare se stessi"); /// --> Invito a se stessi
+            throw new Exception("Errore: Impossibile invitare se stessi");
         }
 
         Utente mittente=userRep.findByUsername(userMittente).orElseThrow();
 
         Utente ricevente=userRep.findByUsername(userRicevente).orElseThrow(
-                ()->new Exception("Errore: Utente non trovato")); /// --> Utente non trovato
+                ()->new Exception("Errore: Utente non trovato"));
+
+        Team team = teamRep.findByUtenti_Username(userMittente).orElseThrow(
+                ()->new Exception("Errore: Team di appartenenza non trovato"));
+
+        Hackathon hackathon = team.getHackathon();
+
+        if(hackathon.getStato()!="IN_ISCRIZIONE"){
+            throw new Exception("Errore: Impossibile invitare, fase di iscrizione conclusa");
+        }
 
         if(ricevente.getRuolo()!= Ruolo.UTENTE){
-            throw  new Exception("Errore: È possibile invitare solo gli utenti"); /// --> Non autorizzati
+            throw  new Exception("Errore: È possibile invitare solo gli utenti");
         }
 
         if(invitoRep.existsByMittenteAndRicevente(mittente,ricevente)){
-            throw new Exception("Errore: Utente già invitato"); /// --> Invito utente già invitato
+            throw new Exception("Errore: Utente già invitato");
         }
 
         if(teamRep.findByUtenti_Username(userMittente).isEmpty()){
-            throw  new Exception("Errore: Devi creare prima un team!"); /// --> Il mittente non ha un team
+            throw  new Exception("Errore: Devi creare prima un team!");
         }
 
         if (teamRep.findByUtenti_Username(userRicevente).isPresent()){
-            throw  new Exception("Errore: L'Utente è già in un team"); /// --> Il ricevente è già in un team
+            throw  new Exception("Errore: L'Utente è già in un team");
         }
 
         Invito invito=new Invito(mittente,ricevente);
@@ -123,6 +133,16 @@ public class InvitoHandler {
         // controllo sulla validità dell'invito
         if (invito.getEsitoInvito() != EsitoInvito.INVIATO) {
             throw new Exception("Errore: Questo invito è già stato gestito in precedenza.");
+        }
+
+        // controllo sullo stato dell'hackathon
+        Team team = teamRep.findByUtenti_Username(invito.getMittente().getUsername()).orElseThrow(
+                ()->new Exception("Errore: Team di appartenenza non trovato"));
+
+        Hackathon hackathon = team.getHackathon();
+
+        if(hackathon.getStato()!="IN_ISCRIZIONE"){
+            throw new Exception("Errore: Impossibile accettare, fase di iscrizione conclusa");
         }
 
         // scelta dell'esito: accettato o rifiutato

@@ -39,7 +39,6 @@ public class Invito {
     public String getMessaggio() {
         return messaggio;
     }
-
     public void setMessaggio(String messaggio) {
         this.messaggio = messaggio;
     }
@@ -50,6 +49,9 @@ public class Invito {
 
     public Utente getRicevente() {
         return ricevente;
+    }
+    public void setRicevente(Utente ricevente) {
+        this.ricevente=ricevente;
     }
 
     public EsitoInvito getEsitoInvito() { return esitoInvito; }
