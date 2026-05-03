@@ -6,10 +6,7 @@ import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.Hackathon;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.team.TeamDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.utenti.Utente;
-import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.HackathonRepository;
-import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.SegnalazioneRepository;
-import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.TeamRepository;
-import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.UtenteRepository;
+import unicam.ids2526.gal.progetto_hackhub_gal.infrastructure.*;
 
 import java.util.List;
 
@@ -26,6 +23,7 @@ public class TeamHandler {
     private final UtenteRepository utenteRep;
     private final SegnalazioneRepository segnalazioneRep;
     private final HackathonRepository hackathonRep;
+    private final SottomissioneRepository sottomissioneRep;
 
 
     /**
@@ -36,11 +34,12 @@ public class TeamHandler {
      * @param segnalazioneRep  repository per l'accesso ai dati delle segnalazioni
      * @param hackathonRep     repository per l'accesso ai dati degli hackathon
      */
-    public TeamHandler(TeamRepository teamRepository, UtenteRepository utenteRep, SegnalazioneRepository segnalazioneRep, HackathonRepository hackathonRep) {
+    public TeamHandler(TeamRepository teamRepository, UtenteRepository utenteRep, SegnalazioneRepository segnalazioneRep, HackathonRepository hackathonRep, SottomissioneRepository sottomissioneRep) {
         this.teamRep = teamRepository;
         this.utenteRep = utenteRep;
         this.segnalazioneRep = segnalazioneRep;
         this.hackathonRep = hackathonRep;
+        this.sottomissioneRep = sottomissioneRep;
     }
 
     /**
@@ -56,7 +55,7 @@ public class TeamHandler {
         }
 
         if(teamRep.findByNome(nomeTeam).isPresent()){
-            throw new Exception("Errore: Esiste già un team con il nome passato");
+            throw new Exception("Errore: Esiste già un team con questo nome");
         }
 
         Utente utente=utenteRep.findByUsername(username).orElseThrow();
@@ -139,8 +138,17 @@ public class TeamHandler {
         Utente utente = utenteRep.findByUsername(username)
                 .orElseThrow(()->new Exception("Errore: non esiste un utente con questo nome"));
 
+        long membriRimanenti = mioTeam.getUtenti().size();
+
         mioTeam.removeUtente(utente);
-        teamRep.save(mioTeam);
+
+        // se il team rimane vuoto viene eliminato
+        if (membriRimanenti == 1) {
+            teamRep.delete(mioTeam);
+        }else{
+            teamRep.save(mioTeam);
+        }
+
     }
 
     /**
@@ -155,7 +163,7 @@ public class TeamHandler {
 
      * @throws Exception se il team con l'id specificato non esiste
      */
-    public TeamDTO visualizzaTeam(String username, Long teamId) throws Exception {
+    public TeamDTO visualizzaTeam(Long teamId) throws Exception {
 
         // recupero il team tramite id
         Team team = teamRep.findById(teamId).orElseThrow(
@@ -185,7 +193,7 @@ public class TeamHandler {
     public List<TeamDTO> consultareElencoTeam() throws Exception {
         List<Team> teams = teamRep.findAll();
 
-        if (teams == null || teams.isEmpty()) {
+        if (teams.isEmpty()) {
             throw new Exception("Errore: Non ci sono team");
         }
 
@@ -215,6 +223,9 @@ public class TeamHandler {
                 ()->new Exception("Errore: Team non esistente"));
 
         Hackathon hackathon = team.getHackathon();
+        if(hackathon == null){
+            throw new Exception("Impossibile eliminare un team, non partecipa ad alcun hackathon");
+        }
 
         // controllo sull'organizzatore
         if(!username.equals(hackathon.getOrganizzatore().getUsername())){
@@ -228,8 +239,10 @@ public class TeamHandler {
         // rimozione del team dall'hackathon
         team.setHackathon(null);
         hackathon.getTeamPartecipanti().remove(team);
+        team.setSottomissione(null);
         teamRep.save(team);
         hackathonRep.save(hackathon);
+        sottomissioneRep.deleteByTeam(team);
     }
 
 

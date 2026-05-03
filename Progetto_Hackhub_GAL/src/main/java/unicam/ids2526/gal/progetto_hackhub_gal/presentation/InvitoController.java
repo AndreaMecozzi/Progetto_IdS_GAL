@@ -38,11 +38,8 @@ public class InvitoController {
     public ResponseEntity<Object> visualizzaInviti(Authentication authentication) {
         String username = authentication.getName();
         try {
-            List<InvitoDTO> invitiDTOs = invitoHandler.visualizzaInviti(username);
-            if (invitiDTOs == null || invitiDTOs.isEmpty()) {
-                return new ResponseEntity<>("Non ci sono inviti", HttpStatus.OK);
-            }
-            return new ResponseEntity<>(invitiDTOs, HttpStatus.OK);
+            List<InvitoDTO> invitoDTOS = invitoHandler.visualizzaInviti(username);
+            return new ResponseEntity<>(invitoDTOS, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

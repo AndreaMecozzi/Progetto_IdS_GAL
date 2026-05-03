@@ -67,15 +67,18 @@ public class InvitoHandler {
 
         Hackathon hackathon = team.getHackathon();
 
-        if(hackathon.getStato()!="IN_ISCRIZIONE"){
-            throw new Exception("Errore: Impossibile invitare, fase di iscrizione conclusa");
+        if(hackathon!=null){
+            if(hackathon.getStato()!="IN_ISCRIZIONE"){
+                throw new Exception("Errore: Impossibile invitare, fase di iscrizione conclusa");
+            }
         }
+
 
         if(ricevente.getRuolo()!= Ruolo.UTENTE){
             throw  new Exception("Errore: È possibile invitare solo gli utenti");
         }
 
-        if(invitoRep.existsByMittenteAndRicevente(mittente,ricevente)){
+        if(invitoRep.existsByMittenteAndRiceventeAndEsitoInvitoNot(mittente,ricevente,EsitoInvito.RIFIUTATO)){
             throw new Exception("Errore: Utente già invitato");
         }
 
@@ -107,6 +110,10 @@ public class InvitoHandler {
         // Recupera gli inviti (ad esempio quelli ricevuti)
         List<Invito> inviti = invitoRep.findByRicevente(utente);
 
+        if(inviti == null || inviti.isEmpty()){
+            throw new Exception("Errore: Non ci sono inviti");
+        }
+
         // Trasformazione in DTO
         return inviti.stream().map(invito -> new InvitoDTO(
                 invito.getInvitoId(),
@@ -131,7 +138,7 @@ public class InvitoHandler {
                 () -> new Exception("Errore: Invito non trovato"));
 
         // controllo sulla validità dell'invito
-        if (invito.getEsitoInvito() != EsitoInvito.INVIATO) {
+        if (invito.getEsitoInvito() == EsitoInvito.ACCETTATO) {
             throw new Exception("Errore: Questo invito è già stato gestito in precedenza.");
         }
 
@@ -141,9 +148,12 @@ public class InvitoHandler {
 
         Hackathon hackathon = team.getHackathon();
 
-        if(hackathon.getStato()!="IN_ISCRIZIONE"){
-            throw new Exception("Errore: Impossibile accettare, fase di iscrizione conclusa");
+        if(hackathon!=null){
+            if(hackathon.getStato()!="IN_ISCRIZIONE"){
+                throw new Exception("Errore: Impossibile gestire l'invito, fase di iscrizione conclusa");
+            }
         }
+
 
         // scelta dell'esito: accettato o rifiutato
         if (esito) {

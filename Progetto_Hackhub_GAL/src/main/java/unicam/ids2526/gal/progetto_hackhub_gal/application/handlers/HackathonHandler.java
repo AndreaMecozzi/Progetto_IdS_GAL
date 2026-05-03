@@ -466,9 +466,6 @@ public class HackathonHandler {
      * @throws Exception se l'hackathon con l'id specificato non esiste
      */
     public HackathonDTO visualizzaHackathon(String username, Long hackathonId) throws Exception {
-           // recupero il richiedente
-        Utente richiedente = utenteRep.findByUsername(username).orElseThrow(
-                () -> new Exception("Errore: Utente non trovato"));
 
         // recupero l'hackathon tramite id
         Hackathon hackathon = hackathonRep.findById(hackathonId).orElseThrow(

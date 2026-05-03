@@ -18,4 +18,6 @@ public interface SottomissioneRepository extends JpaRepository<Sottomissione, Lo
     Optional<Sottomissione> findByTeam_TeamId(Long teamId);
 
     boolean existsByTeam(Team t);
+
+    void deleteByTeam(Team t);
 }

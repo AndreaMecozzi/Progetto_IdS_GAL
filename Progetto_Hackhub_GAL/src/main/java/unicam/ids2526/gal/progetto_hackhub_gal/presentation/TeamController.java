@@ -70,11 +70,9 @@ public class TeamController {
 
     @PreAuthorize("hasAnyAuthority('GIUDICE','MENTORE','ORGANIZZATORE')")
     @GetMapping("/visualizza")
-    public ResponseEntity<Object> visualizzaTeam(Authentication authentication,
-                                                 @RequestParam Long teamId) {
-        String username = authentication.getName();
+    public ResponseEntity<Object> visualizzaTeam(@RequestParam Long teamId) {
         try {
-            TeamDTO teamDTO = teamHandler.visualizzaTeam(username, teamId);
+            TeamDTO teamDTO = teamHandler.visualizzaTeam(teamId);
             return new ResponseEntity<>(teamDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

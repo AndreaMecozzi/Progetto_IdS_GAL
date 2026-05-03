@@ -87,7 +87,7 @@ public class SottomissioneHandler {
         }else{
             switch(h.getStato()){
                 case "IN_ISCRIZIONE"->throw new Exception("Errore: L'hackathon non è ancora iniziato");
-                case "IN_VALUTAZIONE"->throw new Exception("Errore: La sottomissione è in valutazione");
+                case "IN_VALUTAZIONE"->throw new Exception("Errore: L'hackathon è in valutazione");
                 case "CONCLUSO"->throw new Exception("Errore: L'hackathon è concluso");
             }
         }
@@ -107,15 +107,15 @@ public class SottomissioneHandler {
         Team t = teamRep.findByUtenti_Username(username).orElseThrow(
                 () -> new Exception("Errore: Devi fare parte di un team"));
 
-        // recupera la sottomissione
-        Sottomissione sottomissione = sottomissioneRep.findByTeamNome(t.getNome()).orElseThrow(
-                () -> new Exception("Errore: Nessuna sottomissione trovata per questo team"));
-
         // ricava l'hackathon a cui il team partecipa
         Hackathon h = t.getHackathon();
         if (h == null) {
             throw new RuntimeException("Errore: Hackathon non trovato per questo team");
         }
+
+        // recupera la sottomissione
+        Sottomissione sottomissione = sottomissioneRep.findByTeamNome(t.getNome()).orElseThrow(
+                () -> new Exception("Errore: Nessuna sottomissione trovata per questo team"));
 
         // verifica sullo stato dell'Hackathon e sul formato del file che si vuole aggiungere
 
@@ -187,6 +187,13 @@ public class SottomissioneHandler {
                                                           String nomeHackathon) throws Exception {
         Hackathon hackathon=hackathonRep.findByNome(nomeHackathon).orElseThrow(
                 ()->new Exception("Errore: Hackathon non esistente"));
+
+        Utente giudice = utenteRep.findByUsername(username).orElseThrow(
+                ()->new Exception("Errore: Giudice non esistente"));
+
+        if(!hackathon.getGiudice().equals(giudice)){
+            throw new Exception("Errore: non sei giudice di questo hackathon");
+        }
 
         List<Team> teams=hackathon.getTeamPartecipanti();
         List<Sottomissione> sottomissioni=new ArrayList<Sottomissione>();

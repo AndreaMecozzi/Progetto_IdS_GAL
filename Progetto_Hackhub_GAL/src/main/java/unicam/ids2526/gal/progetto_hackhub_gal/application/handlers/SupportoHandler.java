@@ -98,10 +98,6 @@ public class SupportoHandler {
                 () -> new Exception("Errore: Utente non trovato"));
 
 
-        if (richiedente.getRuolo() != Ruolo.MENTORE) {
-            throw new Exception("Errore: Non hai i permessi per visualizzare le richieste di supporto");
-        }
-
         // recupero dell'hackathon gestito dal mentore
         Hackathon hackathon = hackathonRep.findByMentoriContaining(richiedente).orElseThrow(
                 () -> new Exception("Errore: Hackathon non trovato"));
