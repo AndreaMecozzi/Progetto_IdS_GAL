@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.dto.CreaHackathonDTO;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.HackathonHandler;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.HackathonDTO;
+import unicam.ids2526.gal.progetto_hackhub_gal.application.dto.HackathonDTO;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -6,8 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.TeamHandler;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.team.Team;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.team.TeamDTO;
+import unicam.ids2526.gal.progetto_hackhub_gal.application.dto.TeamDTO;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package unicam.ids2526.gal.progetto_hackhub_gal.core.supporto;
+package unicam.ids2526.gal.progetto_hackhub_gal.application.dto;
 
 public class SupportoDTO {
     private Long supportoId;

@@ -7,9 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.SupportoHandler;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.hackathon.HackathonDTO;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.supporto.Supporto;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.supporto.SupportoDTO;
+import unicam.ids2526.gal.progetto_hackhub_gal.application.dto.SupportoDTO;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni;
+package unicam.ids2526.gal.progetto_hackhub_gal.application.dto;
 
 public class SottomissioneDTO {
     private Long sottomissioneID;

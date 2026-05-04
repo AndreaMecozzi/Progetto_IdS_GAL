@@ -8,8 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.SegnalazioneHandler;
 import org.springframework.security.core.Authentication;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.segnalazione.Segnalazione;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.segnalazione.SegnalazioneDTO;
+import unicam.ids2526.gal.progetto_hackhub_gal.application.dto.SegnalazioneDTO;
 
 import java.util.List;
 

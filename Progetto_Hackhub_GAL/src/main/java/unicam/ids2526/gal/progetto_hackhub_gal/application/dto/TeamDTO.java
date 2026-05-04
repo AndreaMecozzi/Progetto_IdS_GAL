@@ -1,4 +1,4 @@
-package unicam.ids2526.gal.progetto_hackhub_gal.core.team;
+package unicam.ids2526.gal.progetto_hackhub_gal.application.dto;
 
 import java.util.List;
 

@@ -1,8 +1,6 @@
 package unicam.ids2526.gal.progetto_hackhub_gal.presentation;
 
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import unicam.ids2526.gal.progetto_hackhub_gal.application.handlers.SottomissioneHandler;
 import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.Sottomissione;
-import unicam.ids2526.gal.progetto_hackhub_gal.core.sottomissioni.SottomissioneDTO;
+import unicam.ids2526.gal.progetto_hackhub_gal.application.dto.SottomissioneDTO;
 
 import java.io.File;
 import java.io.FileInputStream;
